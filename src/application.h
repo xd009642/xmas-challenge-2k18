@@ -2,6 +2,7 @@
 #define XC_APPLICATION_H
 
 #include <cstddef>
+#include "commands.h"
 
 namespace xc {
     //! Singleton representing the application
@@ -14,10 +15,17 @@ namespace xc {
         void init();
         //! Starts the applications update loop
         void start();
+        
+        void close();
+
+        command_interface& command();
     private:
         application() noexcept;
 
+        xc::command_interface cmd;
         bool running;
+
+        int window;
     };
 }
 

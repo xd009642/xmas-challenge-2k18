@@ -1,3 +1,6 @@
+
+set(CMAKE_CXX_STANDARD 17)
+
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 
@@ -11,7 +14,7 @@ if(NOT TARGET OpenGL::OpenGL)
     message(FATAL_ERROR "You need OpenGL to build the xmas challenge")
 endif()
 
-set(LOCAL_SOURCE main.cpp application.cpp)
+set(LOCAL_SOURCE main.cpp application.cpp commands.cpp)
 
 include_directories(GLUT_INCLUDE_DIR)
 

@@ -17,10 +17,18 @@ void keyboard_event(unsigned char key, int x, int y);
 std::size_t framecount;
 
 
-void renderString(int x, int y, const std::string& s) {
+void renderString(int x, int y, const std::string_view s) {
     glRasterPos2f(x, y);
+    auto offset = 0;
     for(const char &c: s) {
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
+        if(c == '\n' || c == '\r') {
+            offset += 15;
+            glRasterPos2f(x, y+offset);
+        } else {
+            std::cout<<"In"<<std::endl;
+            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
+            std::cout<<"OUT"<<std::endl;
+        }
     }
 }
 
@@ -37,23 +45,34 @@ xc::application::application() noexcept {
 void xc::application::init() {
 
     glutInitWindowSize(500,500);
-    glutCreateWindow("Xmas Challenge 2018");
+    window = glutCreateWindow("Xmas Challenge 2018");
 
     int mode = GLUT_RGB|GLUT_SINGLE;
     glutInitDisplayMode(mode);
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
+    glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
+
     glutReshapeFunc(resize);
-    glutDisplayFunc(render);
     glutIdleFunc(update);
     glutKeyboardFunc(keyboard_event);
+    glutDisplayFunc(render);
 }
 
 
 void xc::application::start() {
+    std::cout<<"Starting application"<<std::endl;
     glutMainLoop();
 }
 
+void xc::application::close() {
+    glutDestroyWindow(window);
+    exit(0);
+}
+
+xc::command_interface& xc::application::command() {
+    return cmd;
+}
 
 void update() {
     GLenum err;
@@ -75,12 +94,16 @@ void resize(int w, int h) {
 
 
 void render() {
+    xc::command_interface& cmd = xc::application::instance().command();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
     glColor3f(0.0f, 1.0f, 0.0f);
-    renderString(50.0f, 50.0f, "Hello world");
+    renderString(50.0f, 15.0f, cmd.display());
+    renderString(50.0f, 490.0f, cmd.cmd_string());
     glutSwapBuffers();
 }
 
 
 void keyboard_event(unsigned char key, int x, int y) {
+    xc::application::instance().command().push_char(key);
 }
+
