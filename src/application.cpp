@@ -1,4 +1,5 @@
 #include "application.h"
+
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <string>

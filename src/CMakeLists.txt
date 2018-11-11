@@ -34,4 +34,6 @@ target_link_libraries(xmas
     OpenGL::GLU
     GLUT::GLUT
     ${FREETYPE_LIBRARIES}
-    cpptoml)
+    cpptoml
+    # Added because gcc still has filesystem as experimental
+    stdc++fs)

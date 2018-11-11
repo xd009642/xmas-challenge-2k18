@@ -2,5 +2,5 @@
 fullscreen = true
 
 [Display]
-font_directory = "data/"
+font_directory = "data"
 default_font = ""
