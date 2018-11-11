@@ -4,6 +4,7 @@
 #include <cstddef>
 #include "commands.h"
 #include "config.h"
+#include "glpp/font_engine.h"
 
 namespace xc {
     //! Singleton representing the application
@@ -18,11 +19,14 @@ namespace xc {
         void start();
         
         void close();
-
+        
         command_interface& command();
+
+        glp::font_engine& fonts();
     private:
         application() noexcept;
 
+        glp::font_engine font_eng;
         xc::config config;
         xc::command_interface cmd;
         bool running;

@@ -4,9 +4,7 @@
 #include <GL/gl.h>
 #include <string>
 #include <iostream>
-#include "glpp/font_engine.h"
 
-glp::font_engine fonts;
 
 //! Called each tick
 void update();
@@ -109,8 +107,9 @@ void render() {
     xc::command_interface& cmd = xc::application::instance().command();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
     glColor3f(0.0f, 1.0f, 0.0f);
-    renderString(50.0f, 15.0f, cmd.display());
-    renderString(50.0f, 490.0f, cmd.cmd_string());
+    renderString(50, 15, cmd.display());
+    int height = glutGet(GLUT_WINDOW_HEIGHT);
+    renderString(50, height - 15, cmd.cmd_string());
     glutSwapBuffers();
 }
 
