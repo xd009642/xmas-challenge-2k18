@@ -2,9 +2,11 @@
 #include <iostream>
 
 
-bool glp::font_engine::initialised = false;
-bool glp::font_engine::bad_init = false;
-FT_Library glp::font_engine::ft = {};
+
+glp::font_engine& glp::font_engine::instance() {
+    static glp::font_engine inst;
+    return inst;
+}
 
 glp::font_engine::font_engine() {
     if(!initialised && !bad_init) {
@@ -16,4 +18,12 @@ glp::font_engine::font_engine() {
             initialised = true;
         }
     }
+}
+
+
+bool glp::font_engine::load(const std::filesystem::path& f) {
+    if(FT_New_Face(ft, f.c_str(), 0, &face)) {
+        return false;
+    }
+    return true;
 }

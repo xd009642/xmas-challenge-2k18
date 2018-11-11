@@ -2,9 +2,12 @@
 
 #include <GL/glut.h>
 #include <GL/gl.h>
-#include <string>
+#include <filesystem>
 #include <iostream>
+#include <string>
 
+
+namespace fs = std::filesystem;
 
 //! Called each tick
 void update();
@@ -35,12 +38,14 @@ void renderString(int x, int y, const std::string_view s) {
     }
 }
 
-xc::application& xc::application::instance() noexcept {
+xc::application& xc::application::instance() {
     static xc::application ret;
     return ret;
 }
 
-xc::application::application() noexcept {
+xc::application::application():
+    // TODO bit naughty creating a singleton like this. Might want to change this
+    fonts(glp::font_engine::instance()){
     framecount = 0;
 }
 
@@ -55,6 +60,19 @@ void xc::application::init() {
 
     if(config.fullscreen()) {
         glutFullScreen();
+    }
+
+    if(config.has_default_font()) {
+        fonts.load(config.default_font());
+    } else {
+        for(const auto& p: fs::directory_iterator(config.font_directory())) {
+            if(p.path().extension() == ".ttf") {
+                if(fonts.load(p)) { //TODO should save this back somewhere
+                    std::cout<<"Load font "<<p.path().filename()<<std::endl;
+                }
+                break;
+            }
+        }
     }
 
     int mode = GLUT_RGB|GLUT_SINGLE;
@@ -79,6 +97,12 @@ void xc::application::close() {
     glutDestroyWindow(window);
     exit(0);
 }
+        
+
+std::vector<std::string> xc::application::get_available_fonts() const {
+    return {};
+}
+
 
 xc::command_interface& xc::application::command() {
     return cmd;

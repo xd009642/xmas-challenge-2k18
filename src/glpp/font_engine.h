@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <filesystem>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -10,12 +11,19 @@
 namespace glp {
 
     class font_engine final {
-    public: 
-        font_engine();
+    public:
+        font_engine(const font_engine&) = delete;
+        font_engine(const font_engine&&) = delete;
+        static font_engine& instance();
+        
+        bool load(const std::filesystem::path& f);
     private:
-        static bool initialised;
-        static bool bad_init;
-        static FT_Library ft;
+        font_engine();
+
+        bool initialised = false;
+        bool bad_init = false;
+        FT_Library ft;
+        FT_Face face;
     };
 
 }
