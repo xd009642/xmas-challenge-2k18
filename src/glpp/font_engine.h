@@ -5,6 +5,8 @@
 #include <string>
 #include <filesystem>
 
+#include "font_atlas.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -23,7 +25,7 @@ namespace glp {
         bool initialised = false;
         bool bad_init = false;
         FT_Library ft;
-        FT_Face face;
+        font_atlas atlas;
     };
 
 }

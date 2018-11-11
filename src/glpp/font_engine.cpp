@@ -22,8 +22,10 @@ glp::font_engine::font_engine() {
 
 
 bool glp::font_engine::load(const std::filesystem::path& f) {
+    FT_Face face;
     if(FT_New_Face(ft, f.c_str(), 0, &face)) {
         return false;
     }
-    return true;
+    atlas = glp::font_atlas(face);
+    return atlas.valid();
 }
