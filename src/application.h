@@ -23,7 +23,7 @@ namespace xc {
     private:
         application() noexcept;
 
-        xc::config configuration;
+        xc::config config;
         xc::command_interface cmd;
         bool running;
 

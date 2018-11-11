@@ -1,6 +1,8 @@
 [Project]
-fullscreen = true
+keyboard = true
+debug = true
 
 [Display]
+fullscreen = true
 font_directory = "data"
-default_font = ""
+font = ""

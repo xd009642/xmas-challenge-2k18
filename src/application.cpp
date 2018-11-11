@@ -48,9 +48,16 @@ xc::application::application() noexcept {
 
 
 void xc::application::init() {
+    if(!config.read("Config.toml")) {
+        std::cout << "Failed to parse config file"<<std::endl;
+    }
 
     glutInitWindowSize(500,500);
     window = glutCreateWindow("Xmas Challenge 2018");
+
+    if(config.fullscreen()) {
+        glutFullScreen();
+    }
 
     int mode = GLUT_RGB|GLUT_SINGLE;
     glutInitDisplayMode(mode);
