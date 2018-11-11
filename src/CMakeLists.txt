@@ -11,7 +11,7 @@ if(NOT TARGET OpenGL::OpenGL)
     message(FATAL_ERROR "You need OpenGL to build the xmas challenge")
 endif()
 
-set(LOCAL_SOURCE main.cpp)
+set(LOCAL_SOURCE main.cpp application.cpp)
 
 include_directories(GLUT_INCLUDE_DIR)
 
