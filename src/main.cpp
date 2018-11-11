@@ -1,6 +1,13 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <string>
+#include <iostream>
+#include <memory>
+
+#include "glpp/display_list.h"
+
+std::unique_ptr<glp::display_list> line;
+size_t frame_n=0;
 
 void keyboard_event(unsigned char key, int x, int y) {
 
@@ -14,6 +21,14 @@ void reshape(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+void idle() {
+    GLenum err;
+    while((err = glGetError()) != GL_NO_ERROR) {
+        std::cout<<"Frame "<<frame_n<<": GL Error "<<err<<std::endl;
+    }
+    frame_n++;
+    glutPostRedisplay();
+}
 
 void renderString(int x, int y, const std::string& s) {
     glRasterPos2f(x, y);
@@ -24,9 +39,12 @@ void renderString(int x, int y, const std::string& s) {
 
 
 void render() {
-    glClear(GL_COLOR_BUFFER_BIT); 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
     glColor3f(0.0f, 1.0f, 0.0f);
     renderString(50.0f, 50.0f, "Hello world");
+    if(line) {
+        line->call_list();
+    }
     glutSwapBuffers();
 }
 
@@ -37,7 +55,14 @@ void init() {
     glutDisplayFunc(render);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard_event);
-    glutIdleFunc(glutPostRedisplay);
+    glutIdleFunc(idle);
+    line = std::make_unique<glp::display_list>();
+    auto lock = line->new_list(0);
+    glBegin(GL_LINE_STRIP);
+        glVertex2f(0.0f, 0.0f);
+        glVertex2f(50.0f, 50.0f);
+        glVertex2f(0.0f, 500.0f);
+    glEnd();
 }
 
 int main(int argc, char** argv) {
@@ -46,7 +71,7 @@ int main(int argc, char** argv) {
     glutCreateWindow(argv[0]);
     
     init();
-    
+    std::cout<<"Starting update loop"<<std::endl; 
     glutMainLoop();
     return 0;
 }
