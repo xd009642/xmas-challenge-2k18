@@ -18,6 +18,9 @@ std::size_t framecount;
 
 
 void renderString(int x, int y, const std::string_view s) {
+    if(s.empty()) {
+        return;
+    }
     glRasterPos2f(x, y);
     auto offset = 0;
     for(const char &c: s) {
@@ -25,9 +28,7 @@ void renderString(int x, int y, const std::string_view s) {
             offset += 15;
             glRasterPos2f(x, y+offset);
         } else {
-            std::cout<<"In"<<std::endl;
             glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
-            std::cout<<"OUT"<<std::endl;
         }
     }
 }
