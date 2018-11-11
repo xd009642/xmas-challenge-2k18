@@ -1,0 +1,6 @@
+[Project]
+fullscreen = true
+
+[Display]
+font_directory = "data/"
+default_font = ""

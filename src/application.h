@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include "commands.h"
+#include "config.h"
 
 namespace xc {
     //! Singleton representing the application
@@ -22,6 +23,7 @@ namespace xc {
     private:
         application() noexcept;
 
+        xc::config configuration;
         xc::command_interface cmd;
         bool running;
 

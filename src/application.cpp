@@ -3,6 +3,9 @@
 #include <GL/gl.h>
 #include <string>
 #include <iostream>
+#include "glpp/font_engine.h"
+
+glp::font_engine fonts;
 
 //! Called each tick
 void update();
