@@ -30,8 +30,8 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, block_width*(loaded_chars.size()+1), 
-            block_height+1, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, block_width*(loaded_chars.size()+1), 
+            block_height+1, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -48,7 +48,7 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
         }
 
         glTexSubImage2D(GL_TEXTURE_2D, 0, w, 0, glyph->bitmap.width, 
-                glyph->bitmap.rows, GL_RGB, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
+                glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
         w += block_width;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
