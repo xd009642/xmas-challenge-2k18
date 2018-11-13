@@ -16,6 +16,7 @@ namespace glp {
     public:
         font_engine(const font_engine&) = delete;
         font_engine(const font_engine&&) = delete;
+        ~font_engine();
         static font_engine& instance();
         
         font_atlas& current_font();

@@ -5,6 +5,10 @@
 
 
 glp::font_atlas::font_atlas(FT_Face face, size_t size) {
+    if(FT_Select_Charmap(face, FT_ENCODING_UNICODE)) {
+        std::cout<<"Font must support unicode"<<std::endl;
+    }
+
     if(FT_Set_Pixel_Sizes(face, 0, size)) {
         std::cout<<"Invalid font size selected: "<<size<<std::endl;
     }

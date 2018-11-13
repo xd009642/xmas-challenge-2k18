@@ -21,6 +21,11 @@ glp::font_engine::font_engine() {
 }
 
 
+glp::font_engine::~font_engine() {
+    FT_Done_FreeType(ft);
+}
+
+
 bool glp::font_engine::load(const std::filesystem::path& f) {
     FT_Face face;
     if(FT_New_Face(ft, f.c_str(), 0, &face)) {
@@ -28,6 +33,7 @@ bool glp::font_engine::load(const std::filesystem::path& f) {
     }
     // TODO sort out font default sizing
     atlas = glp::font_atlas(face, 16);
+    FT_Done_Face(face);
     return atlas.valid();
 }
 
