@@ -18,6 +18,8 @@ namespace glp {
         font_engine(const font_engine&&) = delete;
         static font_engine& instance();
         
+        font_atlas& current_font();
+
         bool load(const std::filesystem::path& f);
     private:
         font_engine();

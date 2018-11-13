@@ -19,6 +19,36 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
         block_width = std::max(block_width, glyph->bitmap.width);
         block_height = std::max(block_height, glyph->bitmap.rows);
     }
+
+    glGenTextures(1, &tex_id);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, block_width*(loaded_chars.size()+1), 
+            block_height+1, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    size_t w = 0;
+    for(const char& c: loaded_chars) {
+        if(FT_Load_Char(face, static_cast<FT_ULong>(c), FT_LOAD_RENDER)) {
+            std::cout<<"Failed to reload "<<c<<std::endl;
+        }
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0, w, 0, glyph->bitmap.width, 
+                glyph->bitmap.rows, GL_RGB, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
+        w += block_width;
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    is_valid = true;
 }
 
 glp::font_atlas::~font_atlas() {
@@ -28,4 +58,42 @@ glp::font_atlas::~font_atlas() {
 
 bool glp::font_atlas::font_atlas::valid() const {
     return is_valid;
+}
+
+
+glp::generic_lock glp::font_atlas::font_atlas::bind() {
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    return glp::generic_lock([](){glBindTexture(GL_TEXTURE_2D, 0);});
+}
+
+
+bool glp::font_atlas::contains(const char c) const {
+    return loaded_chars.find(c) != std::string::npos;
+}
+
+
+glp::rect<double> glp::font_atlas::get_coords(const char c) const { 
+    size_t index = loaded_chars.find(c);
+
+    if(index != std::string::npos) {
+        glp::rect<double> result;
+        glp::point<double> tl;
+        glp::point<double> br;
+
+        tl.y = 1.0;
+        br.y=0.0;
+    
+        auto width = static_cast<double>(block_width * loaded_chars.size());
+        tl.x = static_cast<double>(index)/width;
+        if(index+1 == loaded_chars.size()) {
+            br.x = 1.0;
+        } else {
+            br.x = static_cast<double>(index+1)/width;
+        }
+        result.top_left = tl;
+        result.bottom_right = br;
+        
+        return result;
+    }
+    return {{0.0, 0.0}, {0.0, 0.0}};
 }

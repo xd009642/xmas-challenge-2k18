@@ -27,6 +27,11 @@ bool glp::font_engine::load(const std::filesystem::path& f) {
         return false;
     }
     // TODO sort out font default sizing
-    atlas = glp::font_atlas(face, 15);
+    atlas = glp::font_atlas(face, 16);
     return atlas.valid();
+}
+
+
+glp::font_atlas& glp::font_engine::current_font() {
+    return atlas;
 }
