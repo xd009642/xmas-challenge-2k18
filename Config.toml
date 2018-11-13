@@ -1,8 +1,8 @@
 [Project]
 keyboard = true
 debug = true
+assets = "data"
 
 [Display]
 fullscreen = true
-font_directory = "data"
 font = ""

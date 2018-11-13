@@ -8,6 +8,11 @@
 
 namespace xc {
 
+    namespace asset_folders {
+        static constexpr const char* FONT_DIR = "fonts";
+        static constexpr const char* SHADER_DIR = "shaders";
+    }
+
     class config {
     public:
         bool read(const std::filesystem::path& path);
@@ -16,14 +21,15 @@ namespace xc {
         // Getters 
         bool fullscreen() const noexcept;
         bool keyboard() const noexcept;
-        const std::filesystem::path& font_directory() const noexcept;
+        const std::filesystem::path& asset_directory() const noexcept;
+        std::filesystem::path font_directory() const;
         const bool has_default_font() const noexcept;
         const std::filesystem::path& default_font() const noexcept;
     protected:
         void parse_config();
     private:
         //! Directory to search for fonts
-        std::filesystem::path font_dir = "data";
+        std::filesystem::path asset_dir = "data";
         std::filesystem::path font = "";
         //! Whether the app should be shown as full screen
         bool is_fullscreen = true;
@@ -32,6 +38,7 @@ namespace xc {
         //! debug mode 
         bool debug = false;
         std::shared_ptr<cpptoml::table> file;
+
     };
 
 }

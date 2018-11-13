@@ -3,6 +3,8 @@
 
 namespace fs = std::filesystem;
 
+
+
 bool xc::config::read(const fs::path& path) {
     if(path.has_filename() && fs::exists(path)) {
         try {
@@ -35,6 +37,11 @@ void xc::config::parse_config() {
             std::cout<<"No debug?";
         }
         
+        auto asset_res = file->get_qualified_as<std::string>("Project.assets");
+        if(asset_res) {
+            asset_dir = *asset_res;
+        }
+
         auto disp_table = file->get_table("Display");
         if(disp_table) {
             auto fullscreen_res = disp_table->get_as<bool>("fullscreen");
@@ -42,17 +49,16 @@ void xc::config::parse_config() {
                 is_fullscreen = *fullscreen_res;
             }
 
-            auto fd_res = disp_table->get_as<std::string>("font_directory");
             std::string temp_font;
-            if(fd_res) {
+            if(asset_res) {
                 auto fnt_res = disp_table->get_as<std::string>("font");
-                font_dir = *fd_res;
                 if (fnt_res) {
                     temp_font = *fnt_res;
                 }
             }
             if(!temp_font.empty()) {
-                font = font_dir;
+                font = asset_dir;
+                font.append(asset_folders::FONT_DIR);
                 font.append(temp_font);
             }
         }
@@ -61,7 +67,7 @@ void xc::config::parse_config() {
             std::cout<<"Loaded configuration is"<<std::endl;
             std::cout<<"  Fullscreen: "<<is_fullscreen<<std::endl;
             std::cout<<"  Keyboard: "<<has_keyboard<<std::endl;
-            std::cout<<"  Fonts directory: "<<font_dir<<std::endl;
+            std::cout<<"  Assets directory: "<<asset_dir<<std::endl;
             if(!font.empty()) {
                 std::cout<<"  Default font: "<<font<<std::endl;
             }
@@ -79,8 +85,14 @@ bool xc::config::keyboard() const noexcept {
     return has_keyboard;
 }
 
-const std::filesystem::path& xc::config::font_directory() const noexcept {
-    return font_dir;
+const std::filesystem::path& xc::config::asset_directory() const noexcept {
+    return asset_dir;
+}
+
+std::filesystem::path xc::config::font_directory() const {
+    std::filesystem::path result = asset_dir;
+    result.append(asset_folders::FONT_DIR);
+    return asset_dir;
 }
 
 const bool xc::config::has_default_font() const noexcept {
