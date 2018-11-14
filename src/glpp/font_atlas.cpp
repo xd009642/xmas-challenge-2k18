@@ -29,10 +29,14 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    
+    size_t cols = (2+block_width) * loaded_chars.size();
+    size_t rows = (2+block_height);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, block_width*(loaded_chars.size()+1), 
-            block_height+1, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
-
+    std::vector<uint8_t> init(rows*cols, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, cols, 
+            rows, 0, GL_RED, GL_UNSIGNED_BYTE, init.data());
+    
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -41,7 +45,7 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    size_t w = 0;
+    size_t w = 1;
     for(const char& c: loaded_chars) {
         if(FT_Load_Char(face, static_cast<FT_ULong>(c), FT_LOAD_RENDER)) {
             std::cout<<"Failed to reload "<<c<<std::endl;

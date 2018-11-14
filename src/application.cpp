@@ -130,6 +130,7 @@ void resize(int w, int h) {
 void render() {
     glp::font_engine& fonts = glp::font_engine::instance();
     xc::command_interface& cmd = xc::application::instance().command();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
     //glColor3f(0.0f, 1.0f, 0.0f);
     //renderString(50, 15, cmd.display());
@@ -140,10 +141,10 @@ void render() {
         auto tex = fonts.current_font().bind();
         auto coords = fonts.current_font().get_coords('A');
         glBegin(GL_QUADS);
-            glTexCoord2d(0, 0); glVertex2i(50, 50); 
-            glTexCoord2d(0, 1); glVertex2i(50, 600); 
-            glTexCoord2d(1, 1); glVertex2i(600, 600); 
-            glTexCoord2d(1, 0); glVertex2i(600, 50); 
+            glTexCoord2d(0, 0); glVertex2i(10, 10); 
+            glTexCoord2d(0, 1); glVertex2i(10, 60); 
+            glTexCoord2d(1, 1); glVertex2i(750,60); 
+            glTexCoord2d(1, 0); glVertex2i(750, 10); 
         glEnd();
     }
 
