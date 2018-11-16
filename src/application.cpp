@@ -139,12 +139,12 @@ void render() {
     if(fonts.current_font().valid()) {
         glEnable(GL_TEXTURE_2D);
         auto tex = fonts.current_font().bind();
-        auto coords = fonts.current_font().get_coords('A');
+        auto dims = fonts.current_font().dimensions();
         glBegin(GL_QUADS);
             glTexCoord2d(0, 0); glVertex2i(10, 10); 
-            glTexCoord2d(0, 1); glVertex2i(10, 60); 
-            glTexCoord2d(1, 1); glVertex2i(750,60); 
-            glTexCoord2d(1, 0); glVertex2i(750, 10); 
+            glTexCoord2d(0, 1); glVertex2i(10, 10 + dims.length[1]); 
+            glTexCoord2d(1, 1); glVertex2i(10 + dims.length[0],10 + dims.length[1]); 
+            glTexCoord2d(1, 0); glVertex2i(10 + dims.length[0], 10); 
         glEnd();
     }
 

@@ -1,6 +1,7 @@
 #ifndef GLPP_FONT_ATLAS_H
 #define GLPP_FONT_ATLAS_H
 
+#include <map>
 #include <string>
 
 #include "GL/gl.h"
@@ -11,6 +12,16 @@
 #include "types.h"
 
 namespace glp {
+
+    struct entry {
+        GLfloat tx0;
+        GLfloat tx1;
+        GLfloat ty0;
+        GLfloat ty1;
+        size_t width;
+        size_t height;
+    };
+
     //! Texture atlas class
     class font_atlas {
     public:
@@ -26,16 +37,21 @@ namespace glp {
         bool contains(const char c) const;
 
         rect<double> get_coords(const char c) const;
+
+        range2u dimensions() const;        
+    protected:
+        uint32_t get_atlas_height(FT_Face& face);
+
     private:
         bool is_valid = false;
-        unsigned int block_width = 0;
-        unsigned int block_height = 0;
 
         static constexpr char MIN_CHAR = ' ';
         static constexpr char MAX_CHAR = '~';
-        std::string loaded_chars;
-
+        
         GLuint tex_id;
+
+        range2u dim;
+        std::map<char, entry> characters;
     };
     
 }
