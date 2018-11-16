@@ -142,9 +142,9 @@ void render() {
         auto dims = fonts.current_font().dimensions();
         glBegin(GL_QUADS);
             glTexCoord2d(0, 0); glVertex2i(10, 10); 
-            glTexCoord2d(0, 1); glVertex2i(10, 10 + dims.length[1]); 
-            glTexCoord2d(1, 1); glVertex2i(10 + dims.length[0],10 + dims.length[1]); 
-            glTexCoord2d(1, 0); glVertex2i(10 + dims.length[0], 10); 
+            glTexCoord2d(0, 1); glVertex2i(10, 10 + dims.length[1]*2); 
+            glTexCoord2d(1, 1); glVertex2i(10 + dims.length[0]*2,10 + dims.length[1]*2); 
+            glTexCoord2d(1, 0); glVertex2i(10 + dims.length[0]*2, 10); 
         glEnd();
     }
 

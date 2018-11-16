@@ -4,7 +4,7 @@
 #include <cmath>
 
 
-constexpr uint32_t MAX_WIDTH = 1024;
+constexpr uint32_t MAX_WIDTH = 512;
 constexpr uint32_t MARGIN_WIDTH = 1;
 
 // See how many fit in row then inc row count. Add padding
@@ -42,20 +42,20 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
 
     size_t w = MARGIN_WIDTH;
     size_t h = MARGIN_WIDTH;
-    uint32_t max_height;
+    uint32_t max_height=0;
     for(char i = MIN_CHAR; i<=MAX_CHAR; i++) {
         if(FT_Load_Char(face, static_cast<FT_ULong>(i), FT_LOAD_RENDER)) {
             continue;
         }
-        w += glyph->bitmap.width;
         if(w + glyph->bitmap.width > MAX_WIDTH) {
             w = MARGIN_WIDTH;
             h += max_height;
             max_height = 0;
         }
-
         glTexSubImage2D(GL_TEXTURE_2D, 0, w, h, glyph->bitmap.width, 
                 glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
+        
+        w += glyph->bitmap.width + MARGIN_WIDTH;
         
         max_height = std::max(max_height, glyph->bitmap.rows);
 
@@ -91,7 +91,7 @@ uint32_t glp::font_atlas::get_atlas_height(FT_Face& face) {
         if(FT_Load_Char(face, static_cast<FT_ULong>(i), FT_LOAD_RENDER)) {
             continue; // Failed to load the character
         }
-        current_width += glyph->bitmap.width;
+        current_width += glyph->bitmap.width + MARGIN_WIDTH;
         if(current_width > MAX_WIDTH) {
             result += row_height;
             row_height = 0;

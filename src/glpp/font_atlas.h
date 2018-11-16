@@ -45,7 +45,7 @@ namespace glp {
     private:
         bool is_valid = false;
 
-        static constexpr char MIN_CHAR = ' ';
+        static constexpr char MIN_CHAR = '!';
         static constexpr char MAX_CHAR = '~';
         
         GLuint tex_id;
