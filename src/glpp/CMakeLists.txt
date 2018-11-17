@@ -16,6 +16,7 @@ set(LOCAL_SOURCE
     display_list.cpp 
     font_engine.cpp
     font_atlas.cpp
+    program.cpp
     wrappers.cpp)
 
 include_directories(
