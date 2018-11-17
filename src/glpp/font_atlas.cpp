@@ -22,7 +22,11 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
 
     auto height = get_atlas_height(face);
 
-    glGenTextures(1, &tex_id);
+    //glGenTextures(1, &tex_id);
+    tex = std::make_shared<glp::texture>();
+    if(tex) {
+        tex_id = tex->id();
+    }
     glBindTexture(GL_TEXTURE_2D, tex_id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
@@ -76,7 +80,7 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
 }
 
 glp::font_atlas::~font_atlas() {
-
+    // No need to destroy texture shared_ptr<texture> does that
 }
 
 
@@ -118,10 +122,13 @@ bool glp::font_atlas::contains(const char c) const {
     return characters.find(c) != characters.end();
 }
 
-
-glp::rect<double> glp::font_atlas::get_coords(const char c) const { 
-    return {{0.0, 0.0}, {0.0, 0.0}};
+const glp::entry& glp::font_atlas::get_entry(const char c) const {
+    if(!contains(c)) {
+        throw std::out_of_range("Character not in atlas");
+    }
+    return characters.find(c)->second;
 }
+
         
 glp::range2u glp::font_atlas::dimensions() const {
     return dim;

@@ -1,15 +1,18 @@
 #ifndef GLPP_FONT_ATLAS_H
 #define GLPP_FONT_ATLAS_H
 
-#include <map>
-#include <string>
+#include "generic_lock.h"
+#include "gl_includes.h"
+#include "types.h"
+#include "wrappers.h"
 
-#include "GL/gl.h"
+#include <exception>
+#include <map>
+#include <memory>
+#include <string>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "generic_lock.h"
-#include "types.h"
 
 namespace glp {
 
@@ -36,7 +39,7 @@ namespace glp {
         //! Does it contain the following character?
         bool contains(const char c) const;
 
-        rect<double> get_coords(const char c) const;
+        const entry& get_entry(const char c) const;
 
         range2u dimensions() const;        
     protected:
@@ -49,6 +52,8 @@ namespace glp {
         static constexpr char MAX_CHAR = '~';
         
         GLuint tex_id;
+
+        std::shared_ptr<texture> tex;
 
         range2u dim;
         std::map<char, entry> characters;

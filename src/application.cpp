@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "application.h"
 
 #include <GL/glut.h>
@@ -85,6 +86,17 @@ void xc::application::init() {
     glutIdleFunc(update);
     glutKeyboardFunc(keyboard_event);
     glutDisplayFunc(render);
+
+    auto err = glewInit();
+    if(GLEW_OK != err) {
+        std::cout<<"No GLEW holding this together"<<std::endl;
+    }
+
+    if(!GLEW_VERSION_2_1) {
+        std::cerr<<"Error: Graphics card does not support OpenGL 2.0"<<std::endl;
+    }
+
+    std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
 }
 
 

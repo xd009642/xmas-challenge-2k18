@@ -1,9 +1,5 @@
+#include <GL/glew.h>
 #include <GL/glut.h>
-#include <GL/gl.h>
-#include <string>
-#include <iostream>
-#include <memory>
-
 #include "application.h"
 
 

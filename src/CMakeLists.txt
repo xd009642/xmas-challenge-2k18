@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 message(STATUS "cmake module path:${CMAKE_ROOT}")
 
+find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(Freetype REQUIRED)
@@ -24,7 +25,10 @@ set(LOCAL_SOURCE
     config.cpp
     commands.cpp)
 
-include_directories(${GLUT_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS})
+include_directories(
+    ${GLEW_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIR} 
+    ${FREETYPE_INCLUDE_DIRS})
 
 add_executable(xmas ${LOCAL_SOURCE})
 
@@ -33,6 +37,7 @@ target_link_libraries(xmas
     OpenGL::OpenGL 
     OpenGL::GLU
     GLUT::GLUT
+    ${GLEW_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     cpptoml
     # Added because gcc still has filesystem as experimental

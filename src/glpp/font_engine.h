@@ -1,11 +1,11 @@
 #ifndef GLPP_FONT_ENGINE_H
 #define GLPP_FONT_ENGINE_H
 
-#include <vector>
-#include <string>
-#include <filesystem>
-
 #include "font_atlas.h"
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

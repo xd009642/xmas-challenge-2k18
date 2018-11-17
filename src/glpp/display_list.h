@@ -2,12 +2,12 @@
 #define GLPP_DISPLAY_LIST
 
 #include "generic_lock.h"
-#include "GL/gl.h"
-
+#include "gl_includes.h"
 
 namespace glp {
 
     //! Safe wrapper around an OpenGL display list.
+    //! Because these are a list of list of commands I won't both using a wrapper class
     class display_list final {
     public:
         //! Mode to use when creating a new list

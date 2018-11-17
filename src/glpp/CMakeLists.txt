@@ -1,3 +1,4 @@
+find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(Freetype REQUIRED)
@@ -14,13 +15,18 @@ set(LOCAL_SOURCE
     generic_lock.cpp 
     display_list.cpp 
     font_engine.cpp
-    font_atlas.cpp)
+    font_atlas.cpp
+    wrappers.cpp)
 
-include_directories(${GLUT_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS})
+include_directories(
+    ${GLEW_INCLUDE_DIR}
+    ${GLUT_INCLUDE_DIR} 
+    ${FREETYPE_INCLUDE_DIRS})
 
 add_library(glpp ${LOCAL_SOURCE})
 
-target_link_libraries(glpp 
+target_link_libraries(glpp
+    ${GLEW_LIBRARY}
     OpenGL::OpenGL 
     OpenGL::GLU
     GLUT::GLUT
