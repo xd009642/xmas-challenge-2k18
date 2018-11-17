@@ -20,6 +20,15 @@ namespace glp {
         bool compile();
         //! Uses the current shader program for rendering
         void attach();
+        //! Detaches the current program 
+        void detach();
+        //! If compiled and linked return true
+        bool valid() const noexcept;
+        //! The shader programs id 
+        GLuint handle() const noexcept;
+    protected: 
+        bool load_shader(GLuint sid, const std::string& source);
+        std::string get_info_log(GLuint shader);
     private:
         GLuint id = 0;
         
