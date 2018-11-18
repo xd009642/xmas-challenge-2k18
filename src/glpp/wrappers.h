@@ -9,10 +9,15 @@ namespace glp {
 
     GLuint create_texture();
     void delete_texture(GLuint id);
+    GLuint create_buffer();
+    void delete_buffer(GLuint id);
 
+    GLuint create_program();
+    void delete_program(GLuint id);
     GLuint create_fragment_shader();
     GLuint create_vertex_shader();
     void delete_shader(GLuint id);
+
 
 
     using ctor_fn = decltype(create_texture);
@@ -38,6 +43,8 @@ namespace glp {
     };
 
     using texture = gl_obj_wrapper<create_texture, delete_texture>;
+    using buffer_obj = gl_obj_wrapper<create_buffer, delete_buffer>;
+    using program_obj = gl_obj_wrapper<create_program, delete_program>;
     using fragment_shader = gl_obj_wrapper<create_fragment_shader, delete_shader>;
     using vertex_shader = gl_obj_wrapper<create_vertex_shader, delete_shader>;
 

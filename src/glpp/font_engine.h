@@ -1,10 +1,14 @@
 #ifndef GLPP_FONT_ENGINE_H
 #define GLPP_FONT_ENGINE_H
 
+#include "gl_includes.h"
 #include "font_atlas.h"
+#include "program.h"
+#include "types.h"
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <ft2build.h>
@@ -14,14 +18,20 @@ namespace glp {
 
     class font_engine final {
     public:
+        //! Get the engine instance
+        static font_engine& instance();
+        //! Delete copy and move ctors
         font_engine(const font_engine&) = delete;
         font_engine(const font_engine&&) = delete;
         ~font_engine();
-        static font_engine& instance();
-        
+        //! Sets a shader program for rendering fonts with the engine
+        void set_program(const program& p);
+        //! Gets the atlas of the current font
         font_atlas& current_font();
-
+        //! Load a font into the engine (currently causes prior font to unload)
         bool load(const std::filesystem::path& f);
+        //! Render some 2D text at given scale
+        void render_text(const std::string_view text, float x, float y, float sx, float sy);
     private:
         font_engine();
 
@@ -29,6 +39,8 @@ namespace glp {
         bool bad_init = false;
         FT_Library ft;
         font_atlas atlas;
+
+        program default_shader;
     };
 
 }

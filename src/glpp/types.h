@@ -23,7 +23,13 @@ namespace glp {
         point<T> top_left;
         point<T> bottom_right;
     };
-    
+   
+    struct mesh_2d {
+        GLfloat x;
+        GLfloat y;
+        GLfloat s;
+        GLfloat t;
+    };
     
 }
 

@@ -6,9 +6,11 @@
 #include "wrappers.h"
 
 #include <filesystem>
+#include <string>
+#include <vector>
 
 namespace glp {
-
+    //! Wrapper around a shader program
     class program {
     public:
 
@@ -27,11 +29,13 @@ namespace glp {
         //! The shader programs id 
         GLuint handle() const noexcept;
     protected: 
-        bool load_shader(GLuint sid, const std::string& source);
+        //! Given a shader id and source compile the shader
+        bool compile_shader(GLuint sid, const std::string& source);
+        //! Gets the shader info log 
         std::string get_info_log(GLuint shader);
     private:
-        GLuint id = 0;
-        
+
+        std::shared_ptr<program_obj> prog;
         std::shared_ptr<fragment_shader> fragment;
         std::shared_ptr<vertex_shader> vertex;
     };

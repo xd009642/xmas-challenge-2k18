@@ -6,6 +6,7 @@
 #include "types.h"
 #include "wrappers.h"
 
+#include <algorithm>
 #include <exception>
 #include <map>
 #include <memory>

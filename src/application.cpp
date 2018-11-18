@@ -62,20 +62,7 @@ void xc::application::init() {
     if(config.fullscreen()) {
         glutFullScreen();
     }
-
-    if(config.has_default_font()) {
-        fonts.load(config.default_font());
-    } else {
-        for(const auto& p: fs::directory_iterator(config.font_directory())) {
-            if(p.path().extension() == ".ttf") {
-                if(fonts.load(p)) { //TODO should save this back somewhere
-                    std::cout<<"Load font "<<p.path().filename()<<std::endl;
-                }
-                break;
-            }
-        }
-    }
-
+    
     int mode = GLUT_RGB|GLUT_SINGLE;
     glutInitDisplayMode(mode);
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -97,6 +84,34 @@ void xc::application::init() {
     }
 
     std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
+    if(config.has_default_font()) {
+        fonts.load(config.default_font());
+        glp::program font_shader;
+        
+        std::filesystem::path f = config.asset_directory();
+        f.append(xc::asset_folders::SHADER_DIR);
+        f.append("colour_font.f.glsl");
+        
+        font_shader.load_fragment(f);
+        f = f.parent_path();
+        f.append("ident.v.glsl");
+        font_shader.load_vertex(f);
+        font_shader.compile(); 
+        
+        if(font_shader.valid()) {
+            fonts.set_program(font_shader);
+        }
+    } else {
+        for(const auto& p: fs::directory_iterator(config.font_directory())) {
+            if(p.path().extension() == ".ttf") {
+                if(fonts.load(p)) { //TODO should save this back somewhere
+                    std::cout<<"Load font "<<p.path().filename()<<std::endl;
+                }
+                break;
+            }
+        }
+    }
+
 }
 
 
@@ -145,6 +160,7 @@ void render() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
     //glColor3f(0.0f, 1.0f, 0.0f);
+
     //renderString(50, 15, cmd.display());
     int height = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -159,7 +175,7 @@ void render() {
             glTexCoord2d(1, 0); glVertex2i(10 + dims.length[0]*2, 10); 
         glEnd();
     }
-
+    fonts.render_text("Hello", 50, 0, 1, 1);
     //renderString(50, height - 15, cmd.cmd_string());
     glutSwapBuffers();
 }
