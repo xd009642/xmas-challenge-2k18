@@ -39,7 +39,8 @@ namespace glp {
         bool bad_init = false;
         FT_Library ft;
         font_atlas atlas;
-
+        
+        std::unique_ptr<glp::buffer_obj> vbo;
         program default_shader;
     };
 

@@ -97,7 +97,8 @@ void xc::application::init() {
         f.append("ident.v.glsl");
         font_shader.load_vertex(f);
         font_shader.compile(); 
-        
+
+        font_shader.print_uniforms();
         if(font_shader.valid()) {
             fonts.set_program(font_shader);
         }
@@ -163,7 +164,7 @@ void render() {
     //renderString(50, 15, cmd.display());
     int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-    if(fonts.current_font().valid()) {
+    if(fonts.current_font().valid() && false) {
         glEnable(GL_TEXTURE_2D);
         auto tex = fonts.current_font().bind();
         auto dims = fonts.current_font().dimensions();

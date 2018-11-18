@@ -54,8 +54,22 @@ void glp::font_engine::render_text(const std::string_view text,
         float sx, 
         float sy) {
 
-    auto vbo = std::make_shared<glp::buffer_obj>();
+    if(!vbo) {
+        vbo = std::make_unique<glp::buffer_obj>();
+    }
+
+    if(!default_shader.valid()) {
+        std::cout<<"Don't have a valid shader"<<std::endl;
+    }
+
+    GLint colour = default_shader.get_uniform("colour");
+    GLint tex_i = default_shader.get_uniform("texture");
+    GLint coord = default_shader.get_attrib("vert");
+    if(colour == -1 || tex_i == -1) {
+        std::cout<<"Failed to find one or more uniforms"<<std::endl;
+    }
     if(vbo) {
+        
         default_shader.attach();
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -63,12 +77,10 @@ void glp::font_engine::render_text(const std::string_view text,
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLfloat green[4] = {0,1,0,1};
-        GLint colour = default_shader.get_uniform("colour");
-        GLint tex_i = default_shader.get_uniform("texture");
         glUniform4fv(colour, 1, green);
-        GLint coord = default_shader.get_attrib("vert");
         auto tex_lock = atlas.bind();
         glUniform1i(tex_i, 0);
+        
         glEnableVertexAttribArray(coord);
         glBindBuffer(GL_ARRAY_BUFFER, vbo->id());
         glVertexAttribPointer(coord, 4, GL_FLOAT, GL_FALSE, 0, 0);
@@ -130,7 +142,5 @@ void glp::font_engine::render_text(const std::string_view text,
         glBufferData(GL_ARRAY_BUFFER, coords.size()*sizeof(glp::mesh_2d), coords.data(), GL_DYNAMIC_DRAW);
         glDrawArrays(GL_TRIANGLES, 0, coords.size());
         glDisableVertexAttribArray(coord);
-
-        default_shader.detach();
     }
 }

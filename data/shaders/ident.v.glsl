@@ -3,6 +3,6 @@ attribute vec4 vert;
 varying vec2 tex_coord;  
 
 void main(void) {
-    gl_Position = vec4(vert.xy, 0, 1);
+    gl_Position = vec4(vert.xy, 0.0, 1.0);
     tex_coord = vert.zw;
 }

@@ -13,21 +13,26 @@ bool glp::program::load_fragment(const fs::path& file) {
         std::ifstream f(file);
         std::stringstream buffer;
         buffer << f.rdbuf();
-       
-        fragment = std::make_shared<glp::fragment_shader>();
-        if(fragment) {
-            GLuint id = fragment->id();
-            std::string source = buffer.str();
-            if(!compile_shader(id, source)) {
-                std::cout<<"Fragment Shader ERROR: "<<get_info_log(id)<<std::endl;
-                fragment.reset();
-                result = false;
-            } else {
-                result = true;
-            }
-        }
+        result = load_fragment(buffer.str()); 
     } else {
         std::cout<<"Failed to find shader source "<<file<<std::endl;
+    }
+    return result;
+}
+
+
+bool glp::program::load_fragment(const std::string& source) {
+    bool result = false;
+    fragment = std::make_shared<glp::fragment_shader>();
+    if(fragment) {
+        GLuint id = fragment->id();
+        if(!compile_shader(id, source)) {
+            std::cout<<"Fragment Shader ERROR: "<<get_info_log(id)<<std::endl;
+            fragment.reset();
+            result = false;
+        } else {
+            result = true;
+        }
     }
     return result;
 }
@@ -39,22 +44,28 @@ bool glp::program::load_vertex(const fs::path& file) {
         std::ifstream f(file);
         std::stringstream buffer;
         buffer << f.rdbuf();
-       
-        vertex = std::make_shared<glp::vertex_shader>();
-        if(vertex) {
-            GLuint id = vertex->id();
-            std::string source = buffer.str();
-            if(!compile_shader(id, source)) {
-                std::cout<<"Vertex Shader ERROR: "<<get_info_log(id)<<std::endl;
-                vertex.reset();
-                result = false;
-            } else {
-                result = true;
-            }
-        }
+        result = load_vertex(buffer.str()); 
     } else {
         std::cout<<"Failed to find shader source "<<file<<std::endl;
     }
+    return result;
+}
+
+
+bool glp::program::load_vertex(const std::string& source) {
+    bool result = false;
+    vertex = std::make_shared<glp::vertex_shader>();
+    if(vertex) {
+        GLuint id = vertex->id();
+        if(!compile_shader(id, source)) {
+            std::cout<<"Vertex Shader ERROR: "<<get_info_log(id)<<std::endl;
+            vertex.reset();
+            result = false;
+        } else {
+            result = true;
+        }
+    }
+
     return result;
 }
 
@@ -96,6 +107,9 @@ bool glp::program::compile() {
                 prog.reset();
                 std::cout<<"Failed to compile program"<<std::endl;
             } 
+            // now they're linked don't need them
+            glDetachShader(id, fragment->id());
+            glDetachShader(id, vertex->id());
             fragment.reset();
             vertex.reset();
         }
@@ -107,6 +121,8 @@ bool glp::program::compile() {
 void glp::program::attach() {
     if(prog) {
         glUseProgram(prog->id());
+    } else {
+        std::cout<<"Failed to attach shader"<<std::endl;
     }
 }
 
@@ -131,6 +147,8 @@ GLuint glp::program::handle() const noexcept {
 GLint glp::program::get_uniform(const std::string& name) {
     if(prog) {
         return glGetUniformLocation(prog->id(), name.data());
+    } else {
+        std::cout<<"Trying to get uniform when no program's been compiled"<<std::endl;
     }
     return -1;
 }
@@ -138,6 +156,27 @@ GLint glp::program::get_uniform(const std::string& name) {
 GLint glp::program::get_attrib(const std::string& name) {
     if(prog) {
         return glGetAttribLocation(prog->id(), name.data());
+    } else {
+        std::cout<<"Trying to get attrib when no program's been compiled"<<std::endl;
     }
     return -1;
+}
+
+
+void glp::program::print_uniforms() {
+    if(prog) {
+        // If I use a name larger than this I should probably be shot
+        const int MAX_NAME_LEN = 25;
+        GLchar name[MAX_NAME_LEN];
+        GLint count;
+        
+        glGetProgramiv(prog->id(), GL_ACTIVE_UNIFORMS, &count);
+        std::cout<<"Program contains "<<count<<" uniform(s)"<<std::endl;
+        for(GLint i=0; i<count; i++) {
+            glGetActiveUniform(prog->id(), static_cast<GLuint>(i), MAX_NAME_LEN,
+            nullptr, nullptr, nullptr, name);
+
+            std::cout<<name<<std::endl;
+        }
+    }
 }
