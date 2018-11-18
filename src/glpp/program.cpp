@@ -127,3 +127,17 @@ GLuint glp::program::handle() const noexcept {
         return 0;
     }
 }
+
+GLint glp::program::get_uniform(const std::string& name) {
+    if(prog) {
+        return glGetUniformLocation(prog->id(), name.data());
+    }
+    return -1;
+}
+
+GLint glp::program::get_attrib(const std::string& name) {
+    if(prog) {
+        return glGetAttribLocation(prog->id(), name.data());
+    }
+    return -1;
+}

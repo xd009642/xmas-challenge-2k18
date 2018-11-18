@@ -159,7 +159,6 @@ void render() {
     xc::command_interface& cmd = xc::application::instance().command();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-    //glColor3f(0.0f, 1.0f, 0.0f);
 
     //renderString(50, 15, cmd.display());
     int height = glutGet(GLUT_WINDOW_HEIGHT);
@@ -168,14 +167,16 @@ void render() {
         glEnable(GL_TEXTURE_2D);
         auto tex = fonts.current_font().bind();
         auto dims = fonts.current_font().dimensions();
-        glBegin(GL_QUADS);
-            glTexCoord2d(0, 0); glVertex2i(10, 10); 
-            glTexCoord2d(0, 1); glVertex2i(10, 10 + dims.length[1]*2); 
-            glTexCoord2d(1, 1); glVertex2i(10 + dims.length[0]*2,10 + dims.length[1]*2); 
-            glTexCoord2d(1, 0); glVertex2i(10 + dims.length[0]*2, 10); 
+        glBegin(GL_TRIANGLES);
+            glTexCoord2d(0.722656, 0.0277778); glVertex2i(10, 10); 
+            glTexCoord2d(0.722656, 0.277778); glVertex2i(10, 30); 
+            glTexCoord2d(0.740234, 0.277778); glVertex2i(30, 30); 
+            glTexCoord2d(0.722656, 0.0277778); glVertex2i(10, 10); 
+            glTexCoord2d(0.740234, 0.277778); glVertex2i(30, 30); 
+            glTexCoord2d(0.740234, 0.0277778); glVertex2i(30, 10); 
         glEnd();
     }
-    fonts.render_text("Hello", 50, 0, 1, 1);
+    fonts.render_text("H", 50, height - 15, 1, 1);
     //renderString(50, height - 15, cmd.cmd_string());
     glutSwapBuffers();
 }

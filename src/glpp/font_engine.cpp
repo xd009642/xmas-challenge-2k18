@@ -57,12 +57,23 @@ void glp::font_engine::render_text(const std::string_view text,
     auto vbo = std::make_shared<glp::buffer_obj>();
     if(vbo) {
         default_shader.attach();
-        auto tex_lock = atlas.bind();
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo->id());
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        std::vector<glp::mesh_2d> coords(text.size());
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        GLfloat green[4] = {0,1,0,1};
+        GLint colour = default_shader.get_uniform("colour");
+        GLint tex_i = default_shader.get_uniform("texture");
+        glUniform4fv(colour, 1, green);
+        GLint coord = default_shader.get_attrib("vert");
+        auto tex_lock = atlas.bind();
+        glUniform1i(tex_i, 0);
+        glEnableVertexAttribArray(coord);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo->id());
+        glVertexAttribPointer(coord, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+        std::vector<glp::mesh_2d> coords;
         size_t max_height = 0;
         float start_x = x;
         // Sort out coordinates and texturing
@@ -116,9 +127,9 @@ void glp::font_engine::render_text(const std::string_view text,
             }
         }
         
-        glBufferData(GL_ARRAY_BUFFER, coords.size()*sizeof(uint32_t), coords.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, coords.size()*sizeof(glp::mesh_2d), coords.data(), GL_DYNAMIC_DRAW);
         glDrawArrays(GL_TRIANGLES, 0, coords.size());
-        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(coord);
 
         default_shader.detach();
     }

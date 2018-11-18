@@ -28,6 +28,10 @@ namespace glp {
         bool valid() const noexcept;
         //! The shader programs id 
         GLuint handle() const noexcept;
+        //! Get location from uniform name
+        GLint get_uniform(const std::string& name);
+        //! Get location from attribute name 
+        GLint get_attrib(const std::string& name);
     protected: 
         //! Given a shader id and source compile the shader
         bool compile_shader(GLuint sid, const std::string& source);
