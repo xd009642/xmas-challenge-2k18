@@ -98,7 +98,6 @@ void xc::application::init() {
         font_shader.load_vertex(f);
         font_shader.compile(); 
 
-        font_shader.print_uniforms();
         if(font_shader.valid()) {
             fonts.set_program(font_shader);
         }
@@ -112,7 +111,7 @@ void xc::application::init() {
             }
         }
     }
-
+    std::cout<<"Application initialised "<<glGetError()<<std::endl;
 }
 
 
@@ -163,21 +162,7 @@ void render() {
 
     //renderString(50, 15, cmd.display());
     int height = glutGet(GLUT_WINDOW_HEIGHT);
-
-    if(fonts.current_font().valid() && false) {
-        glEnable(GL_TEXTURE_2D);
-        auto tex = fonts.current_font().bind();
-        auto dims = fonts.current_font().dimensions();
-        glBegin(GL_TRIANGLES);
-            glTexCoord2d(0.722656, 0.0277778); glVertex2i(10, 10); 
-            glTexCoord2d(0.722656, 0.277778); glVertex2i(10, 30); 
-            glTexCoord2d(0.740234, 0.277778); glVertex2i(30, 30); 
-            glTexCoord2d(0.722656, 0.0277778); glVertex2i(10, 10); 
-            glTexCoord2d(0.740234, 0.277778); glVertex2i(30, 30); 
-            glTexCoord2d(0.740234, 0.0277778); glVertex2i(30, 10); 
-        glEnd();
-    }
-    fonts.render_text("H", 50, height - 15, 1, 1);
+    fonts.render_text("HELLO WORLD", 50, height - 75, 1, 1);
     //renderString(50, height - 15, cmd.cmd_string());
     glutSwapBuffers();
 }

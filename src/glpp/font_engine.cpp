@@ -2,7 +2,6 @@
 #include <iostream>
 
 
-
 glp::font_engine& glp::font_engine::instance() {
     static glp::font_engine inst;
     return inst;
@@ -37,7 +36,7 @@ bool glp::font_engine::load(const std::filesystem::path& f) {
         return false;
     }
     // TODO sort out font default sizing
-    atlas = glp::font_atlas(face, 16);
+    atlas = glp::font_atlas(face, 32);
     FT_Done_Face(face);
     return atlas.valid();
 }
@@ -70,8 +69,9 @@ void glp::font_engine::render_text(const std::string_view text,
     }
     if(vbo) {
         
+        float height = glutGet(GLUT_WINDOW_HEIGHT);
+        float width = glutGet(GLUT_WINDOW_WIDTH);
         default_shader.attach();
-        glClear(GL_COLOR_BUFFER_BIT);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -96,33 +96,33 @@ void glp::font_engine::render_text(const std::string_view text,
                 coords.resize(start + 6);
                 
                 // Set the 6 coordinates
-                coords[start]. x = x;
-                coords[start].y = y;
+                coords[start]. x = x/width;
+                coords[start].y = y/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty0;
 
-                coords[start].x = x;
-                coords[start].y = y + e.height;
+                coords[start].x = x/width;
+                coords[start].y = (y + e.height)/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty1;
                 
-                coords[start]. x = x + e.width;
-                coords[start].y = y + e.height;
+                coords[start]. x = (x + e.width)/width;
+                coords[start].y = (y + e.height)/height;
                 coords[start].s = e.tx1;
                 coords[start++].t = e.ty1;
                 
-                coords[start].x = x;
-                coords[start].y = y;
+                coords[start].x = x/width;
+                coords[start].y = y/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty0;
                 
-                coords[start]. x = x + e.width;
-                coords[start].y = y + e.height;
+                coords[start]. x = (x + e.width)/width;
+                coords[start].y = (y + e.height)/height;
                 coords[start].s = e.tx1;
                 coords[start++].t = e.ty1;
                 
-                coords[start].x = x + e.width;
-                coords[start].y = y;
+                coords[start].x = (x + e.width)/width;
+                coords[start].y = y/height;
                 coords[start].s = e.tx1;
                 coords[start].t = e.ty0;
                 
@@ -138,7 +138,6 @@ void glp::font_engine::render_text(const std::string_view text,
                 }
             }
         }
-        
         glBufferData(GL_ARRAY_BUFFER, coords.size()*sizeof(glp::mesh_2d), coords.data(), GL_DYNAMIC_DRAW);
         glDrawArrays(GL_TRIANGLES, 0, coords.size());
         glDisableVertexAttribArray(coord);
