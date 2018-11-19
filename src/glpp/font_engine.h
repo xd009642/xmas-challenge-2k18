@@ -1,6 +1,7 @@
 #ifndef GLPP_FONT_ENGINE_H
 #define GLPP_FONT_ENGINE_H
 
+#include "colours.h"
 #include "gl_includes.h"
 #include "font_atlas.h"
 #include "program.h"
@@ -31,7 +32,7 @@ namespace glp {
         //! Load a font into the engine (currently causes prior font to unload)
         bool load(const std::filesystem::path& f);
         //! Render some 2D text at given scale
-        void render_text(const std::string_view text, float x, float y, float sx, float sy);
+        void render_text(const std::string_view text, float x, float y, float sx, float sy, colour c=green);
     private:
         font_engine();
 

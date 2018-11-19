@@ -51,7 +51,8 @@ void glp::font_engine::render_text(const std::string_view text,
         float x,
         float y,
         float sx, 
-        float sy) {
+        float sy,
+        glp::colour c) {
 
     if(!vbo) {
         vbo = std::make_unique<glp::buffer_obj>();
@@ -76,8 +77,7 @@ void glp::font_engine::render_text(const std::string_view text,
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        GLfloat green[4] = {0,1,0,1};
-        glUniform4fv(colour, 1, green);
+        glUniform4fv(colour, 1, c.data());
         auto tex_lock = atlas.bind();
         glUniform1i(tex_i, 0);
         
