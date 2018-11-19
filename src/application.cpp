@@ -23,21 +23,6 @@ void keyboard_event(unsigned char key, int x, int y);
 std::size_t framecount;
 
 
-void renderString(int x, int y, const std::string_view s) {
-    if(s.empty()) {
-        return;
-    }
-    glRasterPos2f(x, y);
-    auto offset = 0;
-    for(const char &c: s) {
-        if(c == '\n' || c == '\r') {
-            offset += 15;
-            glRasterPos2f(x, y+offset);
-        } else {
-            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
-        }
-    }
-}
 
 xc::application& xc::application::instance() {
     static xc::application ret;
@@ -155,15 +140,17 @@ void resize(int w, int h) {
 
 
 void render() {
+    int height = glutGet(GLUT_WINDOW_HEIGHT);
+    int width = glutGet(GLUT_WINDOW_WIDTH);
+    int font_margin = -width + 25;
+
     glp::font_engine& fonts = glp::font_engine::instance();
     xc::command_interface& cmd = xc::application::instance().command();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-    //renderString(50, 15, cmd.display());
-    int height = glutGet(GLUT_WINDOW_HEIGHT);
-    fonts.render_text("HELLO WORLD", 50, height - 75, 1, 1);
-    //renderString(50, height - 15, cmd.cmd_string());
+    fonts.render_text(cmd.display(), font_margin, height-40, 1, 1);
+    fonts.render_text(cmd.cmd_string(), font_margin, -(height-30), 1, 1);
     glutSwapBuffers();
 }
 

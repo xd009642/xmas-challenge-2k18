@@ -94,47 +94,48 @@ void glp::font_engine::render_text(const std::string_view text,
                 const auto& e = atlas.get_entry(c);
                 size_t start = coords.size();
                 coords.resize(start + 6);
-                
+                float y_temp = y - (e.height - e.top);
+                float x_temp = x + e.left; 
                 // Set the 6 coordinates
-                coords[start]. x = x/width;
-                coords[start].y = y/height;
+                coords[start].x = (x_temp)/width;
+                coords[start].y = y_temp/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty0;
 
-                coords[start].x = x/width;
-                coords[start].y = (y + e.height)/height;
+                coords[start].x = (x_temp)/width;
+                coords[start].y = (y_temp + e.height)/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty1;
                 
-                coords[start]. x = (x + e.width)/width;
-                coords[start].y = (y + e.height)/height;
+                coords[start]. x = (x_temp + e.width)/width;
+                coords[start].y = (y_temp + e.height)/height;
                 coords[start].s = e.tx1;
                 coords[start++].t = e.ty1;
                 
-                coords[start].x = x/width;
-                coords[start].y = y/height;
+                coords[start].x = (x_temp)/width;
+                coords[start].y = (y_temp)/height;
                 coords[start].s = e.tx0;
                 coords[start++].t = e.ty0;
                 
-                coords[start]. x = (x + e.width)/width;
-                coords[start].y = (y + e.height)/height;
+                coords[start]. x = (x_temp + e.width)/width;
+                coords[start].y = (y_temp + e.height)/height;
                 coords[start].s = e.tx1;
                 coords[start++].t = e.ty1;
                 
-                coords[start].x = (x + e.width)/width;
-                coords[start].y = y/height;
+                coords[start].x = (x_temp + e.width)/width;
+                coords[start].y = (y_temp)/height;
                 coords[start].s = e.tx1;
                 coords[start].t = e.ty0;
                 
                 x += e.x_increment;
+                y += e.y_increment;
                 max_height = std::max(max_height, e.height);
             } else { // 0 width char like space or \n \r
                 // advance x and y
                 x += 10;
                 if(c == '\n' || c == '\r') {
                     x = start_x;
-                    y += max_height;
-                    max_height = 0;
+                    y -= max_height + 5;
                 } else if(c == ' ') {
                     x += atlas.space_width();
                 }

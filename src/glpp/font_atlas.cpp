@@ -70,7 +70,8 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
         in.ty1 = static_cast<GLfloat>(h)/static_cast<GLfloat>(height);
         in.x_increment = glyph->advance.x/64.0f;
         in.y_increment = glyph->advance.y/64.0f;
-
+        in.left = glyph->bitmap_left;
+        in.top = glyph->bitmap_top;
         characters[i] = in;
         w += glyph->bitmap.width + MARGIN_WIDTH;
     }

@@ -15,7 +15,7 @@ void xc::command_interface::push_char(unsigned char c) {
         if(check()) {
             execute();
         }
-    } else if (c == 8) {
+    } else if (c == 8 && !buffer.empty()) {
         buffer.pop_back();  
     } else {
         buffer.push_back(c);
@@ -43,10 +43,9 @@ bool xc::command_interface::check() {
 void xc::command_interface::execute() {
     if(_current == xc::command::help) {
         display_string = "Welcome to the xmas engineering interface\n\n"
-            "Commands:\n"
-            "help -- shows this message\n"
-            "clear -- clears messages from screen\n"
-            "exit -- quits the program";
+            "Commands\n"
+            "help: shows this message\n"
+            "clear: clears messages from screen";
     } else if(_current == xc::command::clear) {
         display_string= "";
     } else if(_current == xc::command::exit) {
@@ -57,10 +56,10 @@ void xc::command_interface::execute() {
     
 }
 
-const std::string_view xc::command_interface::display() const {
+std::string xc::command_interface::display() const {
     return display_string;
 }
 
-const std::string_view xc::command_interface::cmd_string() const {
+std::string xc::command_interface::cmd_string() const {
     return buffer;
 }

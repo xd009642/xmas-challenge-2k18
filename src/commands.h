@@ -25,9 +25,9 @@ namespace xc {
         command current() const;
         void push_char(unsigned char c);
         // If command is invalid error message will be in display string?
-        const std::string_view display() const;
+        std::string display() const;
 
-        const std::string_view cmd_string() const;
+        std::string cmd_string() const;
     private:
         bool check();
         void execute();

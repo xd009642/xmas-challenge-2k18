@@ -24,8 +24,11 @@ namespace glp {
         GLfloat ty1;
         size_t width;
         size_t height;
+        int left = 0;
+        int top = 0;
         float x_increment;
         float y_increment;
+        float origin;
     };
 
     //! Texture atlas class
