@@ -126,7 +126,7 @@ void glp::font_engine::render_text(const std::string_view text,
                 coords[start].s = e.tx1;
                 coords[start].t = e.ty0;
                 
-                x += e.width;
+                x += e.x_increment;
                 max_height = std::max(max_height, e.height);
             } else { // 0 width char like space or \n \r
                 // advance x and y
@@ -135,6 +135,8 @@ void glp::font_engine::render_text(const std::string_view text,
                     x = start_x;
                     y += max_height;
                     max_height = 0;
+                } else if(c == ' ') {
+                    x += atlas.space_width();
                 }
             }
         }

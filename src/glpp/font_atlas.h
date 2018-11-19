@@ -24,6 +24,8 @@ namespace glp {
         GLfloat ty1;
         size_t width;
         size_t height;
+        float x_increment;
+        float y_increment;
     };
 
     //! Texture atlas class
@@ -42,7 +44,9 @@ namespace glp {
 
         const entry& get_entry(const char c) const;
 
-        range2u dimensions() const;        
+        range2u dimensions() const;
+
+        float space_width() const;
     protected:
         uint32_t get_atlas_height(FT_Face& face);
 
@@ -58,6 +62,8 @@ namespace glp {
 
         range2u dim;
         std::map<char, entry> characters;
+
+        float space;
     };
     
 }

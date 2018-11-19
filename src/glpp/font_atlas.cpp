@@ -59,8 +59,6 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
         glTexSubImage2D(GL_TEXTURE_2D, 0, w, h, glyph->bitmap.width, 
                 glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
         
-        w += glyph->bitmap.width + MARGIN_WIDTH;
-        
         max_height = std::max(max_height, glyph->bitmap.rows);
 
         glp::entry in;
@@ -68,10 +66,19 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
         in.height = glyph->bitmap.rows;
         in.tx0 = static_cast<GLfloat>(w)/static_cast<GLfloat>(MAX_WIDTH);
         in.tx1 = static_cast<GLfloat>(w + in.width)/static_cast<GLfloat>(MAX_WIDTH);
-        in.ty0 = static_cast<GLfloat>(h)/static_cast<GLfloat>(height);
-        in.ty1 = static_cast<GLfloat>(h+in.width)/static_cast<GLfloat>(height);
+        in.ty0 = static_cast<GLfloat>(h + in.height + MARGIN_WIDTH)/static_cast<GLfloat>(height);
+        in.ty1 = static_cast<GLfloat>(h)/static_cast<GLfloat>(height);
+        in.x_increment = glyph->advance.x/64.0f;
+        in.y_increment = glyph->advance.y/64.0f;
 
         characters[i] = in;
+        w += glyph->bitmap.width + MARGIN_WIDTH;
+    }
+
+    if(!FT_Load_Char(face, ' ', FT_LOAD_RENDER)) {
+        space = glyph->advance.x/64.0f;        
+    } else {
+        space = MARGIN_WIDTH * 10;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     dim.length[0] = MAX_WIDTH;
@@ -97,7 +104,7 @@ uint32_t glp::font_atlas::get_atlas_height(FT_Face& face) {
         }
         current_width += glyph->bitmap.width + MARGIN_WIDTH;
         if(current_width > MAX_WIDTH) {
-            result += row_height;
+            result += row_height + MARGIN_WIDTH;
             row_height = 0;
             current_width = MARGIN_WIDTH * 2;
         } else {
@@ -132,4 +139,9 @@ const glp::entry& glp::font_atlas::get_entry(const char c) const {
         
 glp::range2u glp::font_atlas::dimensions() const {
     return dim;
+}
+
+
+float glp::font_atlas::space_width() const { 
+    return space;
 }
