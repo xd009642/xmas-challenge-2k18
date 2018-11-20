@@ -1,4 +1,5 @@
 #include "test_patterns.h"
+#include <algorithm>
 #include <iostream>
 
 static std::string empty_vert = "#version 120\n"
@@ -124,6 +125,15 @@ std::vector<std::string> xc::test_pattern_generator::get_pattern_names() const {
     };
 }
 
+void xc::test_pattern_generator::select(const std::string& pattern_name) {
+    auto names = get_pattern_names();
+    auto it = std::find(names.begin(), names.end(), pattern_name);
+    if(it != names.end()) {
+        current = static_cast<xc::pattern>(std::distance(names.begin(), it));
+    } else {
+        current = xc::pattern::NONE;
+    }
+}
 
 void xc::test_pattern_generator::select(xc::pattern p) {
     current = p;

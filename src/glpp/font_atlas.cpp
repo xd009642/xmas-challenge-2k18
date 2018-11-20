@@ -77,9 +77,9 @@ glp::font_atlas::font_atlas(FT_Face face, size_t size) {
     }
 
     if(!FT_Load_Char(face, ' ', FT_LOAD_RENDER)) {
-        space = glyph->advance.x/64.0f;        
+        space = glyph->advance.x/(size*4); 
     } else {
-        space = MARGIN_WIDTH * 10;
+        space = MARGIN_WIDTH * 5;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     dim.length[0] = MAX_WIDTH;

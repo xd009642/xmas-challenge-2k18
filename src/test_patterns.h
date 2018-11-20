@@ -19,7 +19,7 @@ namespace xc {
         test_pattern_generator() = default;
 
         void init();
-
+        void select(const std::string& pattern_name);
         void select(pattern p);
         void render();
         std::vector<std::string> get_pattern_names() const;

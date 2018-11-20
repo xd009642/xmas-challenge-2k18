@@ -15,6 +15,8 @@ namespace xc {
         // Clears the engineering interface
         clear,
         exit,
+        tpg_list,
+        tpg_show,
         invalid
     };
 
@@ -35,6 +37,7 @@ namespace xc {
         std::string buffer;
         std::string display_string;
 
+        std::string cmd_arg;
         command _current;
     };
 }
