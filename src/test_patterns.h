@@ -25,7 +25,12 @@ namespace xc {
         std::vector<std::string> get_pattern_names() const;
     protected:
         void create_shaders();
-        
+        void create_flat();
+        void create_bars();
+        void create_ramp();
+        void create_checkerboard();
+
+        void create_shader(pattern p, const std::string& fragment_source);
         
     private:
 

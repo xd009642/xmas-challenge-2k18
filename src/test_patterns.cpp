@@ -3,8 +3,10 @@
 
 static std::string empty_vert = "#version 120\n"
     "attribute vec2 coord;"
+    "varying vec2 pos;"
     "void main(void) {"
     "   gl_Position = vec4(coord.xy, 0.0, 1.0);"
+    "   pos = coord.xy;"
     "}";
 
 void xc::test_pattern_generator::init() {
@@ -32,23 +34,89 @@ void xc::test_pattern_generator::init() {
 
 void xc::test_pattern_generator::create_shaders() {
     patterns.resize(static_cast<size_t>(xc::pattern::END));
-
-    std::shared_ptr<glp::program> prog = std::make_shared<glp::program>();
     
+    create_flat();
+    create_bars();
+    create_ramp();
+    create_checkerboard();
+}
 
-    prog->load_vertex(empty_vert);
+void xc::test_pattern_generator::create_flat() {
+
     std::string frag = "#version 120\n"
         "void main(void) {"
             "gl_FragColor = vec4(1.0,1.0,1.0,1.0);"
         "}";
-    prog->load_fragment(frag);
-    if(prog->compile()) {
-        patterns.push_back(prog); 
-    } else {
-        patterns.push_back(nullptr);
-    }
+
+    create_shader(xc::pattern::WHITE, frag);
+
+    frag = "#version 120\n"
+        "void main(void) {"
+            "gl_FragColor = vec4(0.0,0.0,0.0,1.0);"
+        "}";
+    
+    create_shader(xc::pattern::BLACK, frag);
 }
 
+void xc::test_pattern_generator::create_bars() {
+    std::string frag = "#version 120\n"
+        "varying vec2 pos;"
+        "void main(void) {"
+        "    float alpha = sin(pos.x * 50);"
+        "    gl_FragColor = vec4(1.0,1.0,1.0, step(0.0, alpha));"
+        "}";
+
+    create_shader(xc::pattern::HOR_BARS, frag);
+
+    frag = "#version 120\n"
+        "varying vec2 pos;"
+        "void main(void) {"
+        "    float alpha = sin(pos.y * 50);"
+        "    gl_FragColor = vec4(1.0,1.0,1.0, step(0.0, alpha));"
+        "}";
+    
+    create_shader(xc::pattern::VER_BARS, frag);
+
+}
+
+void xc::test_pattern_generator::create_ramp() {
+    std::string frag = "#version 120\n"
+        "varying vec2 pos;"
+        "void main(void) {"
+        "   float y_ramp = 0.5*pos.y + 0.5;"
+        "   gl_FragColor = vec4(1.0,1.0,1.0, y_ramp);"
+        "}";
+    
+    create_shader(xc::pattern::RAMP, frag);
+
+}
+
+void xc::test_pattern_generator::create_checkerboard() {
+    std::string frag = "#version 120\n"
+        "varying vec2 pos;"
+        "void main(void) {"
+        "   const int sz = 5;"
+        "   float res = mod(floor(sz*pos.x) + floor(sz*pos.y), 2);"
+        "   gl_FragColor = vec4(1.0,1.0,1.0, max(sign(res), 0.0));"
+        "}";
+    
+    create_shader(xc::pattern::CHECKERBOARD, frag);
+}
+        
+void xc::test_pattern_generator::create_shader(xc::pattern p, 
+        const std::string& fragment_source) {
+
+    std::shared_ptr<glp::program> prog = std::make_shared<glp::program>();
+
+    prog->load_vertex(empty_vert);
+    prog->load_fragment(fragment_source);
+    if(prog->compile()) {
+        const size_t index = static_cast<size_t>(p);
+        if(index < patterns.size()) {
+            patterns[index] = prog; 
+        }
+    } 
+}
 
 std::vector<std::string> xc::test_pattern_generator::get_pattern_names() const {
     return {
@@ -63,10 +131,11 @@ void xc::test_pattern_generator::select(xc::pattern p) {
 
 
 void xc::test_pattern_generator::render() {
-    if(canvas && patterns[0]) {
-        auto coord = patterns[0]->get_attrib("coord");
+    size_t current_index = static_cast<size_t>(current);
+    if(canvas && patterns[current_index]) {
+        auto coord = patterns[current_index]->get_attrib("coord");
 
-        patterns[0]->attach();
+        patterns[current_index]->attach();
 
         glEnableVertexAttribArray(coord);
         glBindBuffer(GL_ARRAY_BUFFER, canvas->id());
