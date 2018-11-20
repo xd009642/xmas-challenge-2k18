@@ -69,6 +69,9 @@ void xc::application::init() {
     }
 
     std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
+    
+    tpg.init();
+
     if(config.has_default_font()) {
         fonts.load(config.default_font());
         glp::program font_shader;
@@ -120,6 +123,10 @@ xc::command_interface& xc::application::command() {
     return cmd;
 }
 
+xc::test_pattern_generator& xc::application::test_pattern() {
+    return tpg;
+}
+
 void update() {
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {
@@ -145,9 +152,12 @@ void render() {
     int font_margin = -width + 25;
 
     glp::font_engine& fonts = glp::font_engine::instance();
+    auto& tpg = xc::application::instance().test_pattern();
     xc::command_interface& cmd = xc::application::instance().command();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+    tpg.render();
 
     fonts.render_text(cmd.display(), font_margin, height-40, 1, 1);
     fonts.render_text(cmd.cmd_string(), font_margin, -(height-30), 1, 1);

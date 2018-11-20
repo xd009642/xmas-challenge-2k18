@@ -23,7 +23,8 @@ set(LOCAL_SOURCE
     main.cpp 
     application.cpp 
     config.cpp
-    commands.cpp)
+    commands.cpp
+    test_patterns.cpp)
 
 include_directories(
     ${GLEW_INCLUDE_DIRS}

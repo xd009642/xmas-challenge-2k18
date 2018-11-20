@@ -6,6 +6,7 @@
 #include <vector>
 #include "commands.h"
 #include "config.h"
+#include "test_patterns.h"
 #include "glpp/font_engine.h"
 
 namespace xc {
@@ -26,12 +27,15 @@ namespace xc {
         
         command_interface& command();
 
+        test_pattern_generator& test_pattern();
+
     private:
         application();
 
         glp::font_engine& fonts;
         xc::config config;
         xc::command_interface cmd;
+        xc::test_pattern_generator tpg;
         bool running;
 
         int window;
