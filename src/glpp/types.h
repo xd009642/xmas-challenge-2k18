@@ -2,6 +2,7 @@
 #define GLPP_TYPES_H
 
 #include <array>
+#include <utility>
 
 namespace glp {
 
@@ -17,6 +18,9 @@ namespace glp {
         T x;
         T y;
     };
+
+    template<typename T>
+    using line = std::pair<point<T>, point<T>>;
 
     template<typename T>
     struct rect {
