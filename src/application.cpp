@@ -7,6 +7,9 @@
 #include <iostream>
 #include <string>
 
+#include "symbols/heading_tape.h"
+
+sym::heading_tape heading;
 
 namespace fs = std::filesystem;
 
@@ -71,6 +74,8 @@ void xc::application::init() {
     std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
     
     tpg.init();
+
+    heading.init();
 
     if(config.has_default_font()) {
         fonts.load(config.default_font());
@@ -158,6 +163,8 @@ void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
     tpg.render();
+
+    heading.render();
 
     fonts.render_text(cmd.display(), font_margin, height-40, 1, 1);
     fonts.render_text(cmd.cmd_string(), font_margin, -(height-30), 1, 1);

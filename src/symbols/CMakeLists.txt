@@ -7,6 +7,7 @@ if(NOT TARGET OpenGL::OpenGL)
 endif()
 
 set(LOCAL_SOURCE 
+    heading_tape.cpp
     mesh_util.cpp)
 
 add_library(symbols ${LOCAL_SOURCE})

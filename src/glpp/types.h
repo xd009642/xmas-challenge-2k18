@@ -15,9 +15,55 @@ namespace glp {
     
     template<typename T>
     struct point {
+        point(T x, T y):x(x), y(y) {
+        }
+        point(){}
+
         T x;
         T y;
+
+        point<T>& operator+=(const point<T>& i) {
+            x += i.x;
+            y += i.y;
+            return *this;
+        }
+
+        point<T>& operator-=(const point<T>& i) {
+            x -= i.x;
+            y -= i.y;
+            return *this;
+        }
+
+        point<T>& operator*=(const T& i) {
+            x *= i;
+            y *= i;
+            return *this;
+        }
     };
+
+    template<typename T>
+    inline point<T> operator+(point<T> lhs, const point<T>& rhs) {
+        lhs += rhs;
+        return lhs;
+    }
+
+    template<typename T>
+    inline point<T> operator-(point<T> lhs, const point<T>& rhs) {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    template<typename T>
+    inline point<T> operator*(point<T> lhs, const T& rhs) {
+        lhs *= rhs;
+        return lhs;
+    }
+
+    template<typename T>
+    inline point<T> operator*(const T& lhs, point<T> rhs) {
+        rhs *= lhs;
+        return rhs;
+    }
 
     template<typename T>
     using line = std::pair<point<T>, point<T>>;
