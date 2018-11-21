@@ -10,6 +10,16 @@ GLuint glp::create_texture() {
 void glp::delete_texture(GLuint id) {
     glDeleteTextures(1, &id);
 }
+    
+GLuint glp::create_array() {
+    GLuint id;
+    glGenVertexArrays(1, &id);
+    return id;
+}
+
+void glp::delete_array(GLuint id) {
+    glDeleteVertexArrays(1, &id);
+}
 
 GLuint glp::create_buffer() {
     GLuint id;

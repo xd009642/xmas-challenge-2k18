@@ -9,6 +9,8 @@ namespace glp {
 
     GLuint create_texture();
     void delete_texture(GLuint id);
+    GLuint create_array();
+    void delete_array(GLuint id);
     GLuint create_buffer();
     void delete_buffer(GLuint id);
 
@@ -43,6 +45,7 @@ namespace glp {
     };
 
     using texture = gl_obj_wrapper<create_texture, delete_texture>;
+    using array_obj = gl_obj_wrapper<create_array, delete_array>;
     using buffer_obj = gl_obj_wrapper<create_buffer, delete_buffer>;
     using program_obj = gl_obj_wrapper<create_program, delete_program>;
     using fragment_shader = gl_obj_wrapper<create_fragment_shader, delete_shader>;
