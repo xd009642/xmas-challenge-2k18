@@ -46,7 +46,6 @@ bool xc::command_interface::check() {
     } else if(buffer.find(TPG_SHOW)==0) {
         _current = xc::command::tpg_show;
         buffer.erase(0, TPG_SHOW.size());
-        std::cout<<buffer<<std::endl;
         cmd_arg = buffer;
     } else {
         result = false;

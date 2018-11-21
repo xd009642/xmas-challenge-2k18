@@ -10,6 +10,7 @@ find_package(Freetype REQUIRED)
 find_package(cpptoml REQUIRED)
 
 add_subdirectory(glpp)
+add_subdirectory(symbols)
 
 if(NOT TARGET OpenGL::GLU)
     message(FATAL_ERROR "You need GLU to build the xmas challenge")
@@ -35,6 +36,7 @@ add_executable(xmas ${LOCAL_SOURCE})
 
 target_link_libraries(xmas 
     glpp
+    symbols
     OpenGL::OpenGL 
     OpenGL::GLU
     GLUT::GLUT
