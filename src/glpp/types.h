@@ -2,6 +2,8 @@
 #define GLPP_TYPES_H
 
 #include <array>
+#include <cmath>
+#include <type_traits>
 #include <utility>
 
 namespace glp {
@@ -13,7 +15,7 @@ namespace glp {
 
     using range2u = range<uint32_t, 2>;
     
-    template<typename T>
+    template<typename T, typename = std::enable_if<std::is_arithmetic<T>::value>>
     struct point {
         point(T x, T y):x(x), y(y) {
         }
@@ -38,6 +40,11 @@ namespace glp {
             x *= i;
             y *= i;
             return *this;
+        }
+
+        point<T> normalise() const {
+            T scale = std::sqrt(std::pow(x, static_cast<T>(2)) + std::pow(y, static_cast<T>(2)));
+            return point<T>(x*scale, y*scale);
         }
     };
 

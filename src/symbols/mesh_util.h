@@ -22,7 +22,7 @@ namespace sym {
         T dy = b.y - a.y;
         result.x = -dy;
         result.y = dx;
-        return result;
+        return result.normalise();
     }
 
     // Create a mesh for a given line. Returns xy coordinates

@@ -1,6 +1,7 @@
 #include "heading_tape.h"
 #include "mesh_util.h"
 
+#include <iostream>
 
 void sym::heading_tape::init() {
     mesh = std::make_unique<glp::buffer_obj>();
@@ -8,9 +9,9 @@ void sym::heading_tape::init() {
         glBindBuffer(GL_ARRAY_BUFFER, mesh->id());
         auto points = sym::make_line_mesh({
                 glp::point<GLfloat>(-0.8f, 0.8f), 
-                glp::point<GLfloat>(0.0f, 0.8f),
-                glp::point<GLfloat>(0.8f, 0.9f)
-                }, 0.7f);
+                glp::point<GLfloat>(0.0f, 0.6f),
+                glp::point<GLfloat>(0.8f, 0.8f)
+                }, 0.0f);
 
         glBufferData(GL_ARRAY_BUFFER,
                 points.size()*sizeof(glp::point<GLfloat>),
