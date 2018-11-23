@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include "symbols/heading_tape.h"
 
@@ -74,26 +75,25 @@ void xc::application::init() {
     std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
     
     tpg.init();
-
     heading.init();
+    
+    glp::program font_shader;
+    std::filesystem::path f = config.asset_directory();
+    f.append(xc::asset_folders::SHADER_DIR);
+    f.append("colour_font.f.glsl");
+    
+    font_shader.load_fragment(f);
+    f = f.parent_path();
+    f.append("ident.v.glsl");
+    font_shader.load_vertex(f);
+    font_shader.compile(); 
+
+    if(font_shader.valid()) {
+        fonts.set_program(font_shader);
+    }
 
     if(config.has_default_font()) {
         fonts.load(config.default_font());
-        glp::program font_shader;
-        
-        std::filesystem::path f = config.asset_directory();
-        f.append(xc::asset_folders::SHADER_DIR);
-        f.append("colour_font.f.glsl");
-        
-        font_shader.load_fragment(f);
-        f = f.parent_path();
-        f.append("ident.v.glsl");
-        font_shader.load_vertex(f);
-        font_shader.compile(); 
-
-        if(font_shader.valid()) {
-            fonts.set_program(font_shader);
-        }
     } else {
         for(const auto& p: fs::directory_iterator(config.font_directory())) {
             if(p.path().extension() == ".ttf") {
@@ -133,9 +133,14 @@ xc::test_pattern_generator& xc::application::test_pattern() {
 }
 
 void update() {
+    bool had_error = false;
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {
         std::cout<<"Frame "<<framecount<<": GL Error "<<err<<std::endl;
+        had_error = true;
+    }
+    if(had_error) {
+        std::abort();
     }
     framecount++;
     glutPostRedisplay();

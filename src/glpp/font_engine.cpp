@@ -54,6 +54,10 @@ void glp::font_engine::render_text(const std::string_view text,
         float sy,
         glp::colour c) {
 
+    if(text.empty()) {
+        return;
+    }
+
     if(!vbo) {
         vbo = std::make_unique<glp::buffer_obj>();
     }

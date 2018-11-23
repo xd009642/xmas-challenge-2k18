@@ -5,4 +5,4 @@ assets = "data"
 
 [Display]
 fullscreen = true
-font = ""
+font = "FiraCode-Bold.ttf"
