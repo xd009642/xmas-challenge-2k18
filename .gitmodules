@@ -1,3 +1,0 @@
-[submodule "leap-cmake"]
-	path = leap-cmake
-	url = https://github.com/leapmotion/cmake-modules
