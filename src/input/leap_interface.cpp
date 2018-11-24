@@ -27,6 +27,12 @@ void ip::listener::onExit(const Leap::Controller& con) {
 void ip::listener::onFrame(const Leap::Controller& con) {
     Leap::Frame current = con.frame();
     Leap::Frame last = con.frame(1);
+    
+    auto gestures = current.gestures(last);
+    for(const auto& gesture: gestures) {
+        auto hands = gesture.hands();
+        // Do something
+    }
 }
 
 void ip::listener::onFocusGained(const Leap::Controller& con) {
