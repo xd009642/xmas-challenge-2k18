@@ -15,7 +15,7 @@ sym::heading_tape heading;
 namespace fs = std::filesystem;
 
 //! Called each tick
-void update();
+void update(int dt);
 //! Called on window resize
 void resize(int w, int h);
 //! Render the application
@@ -26,7 +26,6 @@ void keyboard_event(unsigned char key, int x, int y);
 void special_key_event(int key, int x, int y);
 
 std::size_t framecount;
-
 
 
 xc::application& xc::application::instance() {
@@ -71,7 +70,7 @@ void xc::application::init_graphics() {
     glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
     glutReshapeFunc(resize);
-    glutIdleFunc(update);
+    glutTimerFunc(16, update, 0);
     glutKeyboardFunc(keyboard_event);
     glutSpecialFunc(special_key_event);
     glutDisplayFunc(render);
@@ -143,7 +142,7 @@ xc::test_pattern_generator& xc::application::test_pattern() {
     return tpg;
 }
 
-void update() {
+void update(int) {
     bool had_error = false;
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {
@@ -155,6 +154,7 @@ void update() {
     }
     framecount++;
     glutPostRedisplay();
+    glutTimerFunc(16, update, 0);
 }
 
 
@@ -181,7 +181,6 @@ void render() {
     tpg.render();
 
     heading.render();
-
     fonts.render_text(cmd.display(), font_margin, height-40, 1, 1);
     fonts.render_text(cmd.cmd_string(), font_margin, -(height-30), 1, 1);
     glutSwapBuffers();
