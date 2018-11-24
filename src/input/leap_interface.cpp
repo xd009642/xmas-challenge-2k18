@@ -5,6 +5,7 @@ Leap::Controller con;
 ip::listener list;
 
 void ip::create() {
+    con.enableGesture(Leap::Gesture::TYPE_SWIPE);
     con.addListener(list);
 }
 
@@ -13,15 +14,19 @@ void ip::listener::onInit(const Leap::Controller& con) {
 }
 
 void ip::listener::onConnect(const Leap::Controller& con) {
+    std::cout<<"LeapMotion connected"<<std::endl;
 }
 
 void ip::listener::onDisconnect(const Leap::Controller& con) {
+    std::cout<<"LeapMotion disconnected"<<std::endl;
 }
 
 void ip::listener::onExit(const Leap::Controller& con) {
 }
 
 void ip::listener::onFrame(const Leap::Controller& con) {
+    Leap::Frame current = con.frame();
+    Leap::Frame last = con.frame(1);
 }
 
 void ip::listener::onFocusGained(const Leap::Controller& con) {
