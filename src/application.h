@@ -32,6 +32,9 @@ namespace xc {
     private:
         application();
 
+        void init_graphics();
+        void init_fonts();
+
         glp::font_engine& fonts;
         xc::config config;
         xc::command_interface cmd;

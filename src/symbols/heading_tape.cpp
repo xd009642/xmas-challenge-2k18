@@ -8,9 +8,9 @@ void sym::heading_tape::init() {
     if(mesh) {
         glBindBuffer(GL_ARRAY_BUFFER, mesh->id());
         auto points = sym::make_line_mesh({
-                glp::point<GLfloat>(-0.8f, 0.8f), 
+                glp::point<GLfloat>(0.8f, 0.8f), 
                 glp::point<GLfloat>(0.0f, 0.6f),
-                glp::point<GLfloat>(0.8f, 0.8f)
+                glp::point<GLfloat>(-0.8f, 0.8f)
                 }, 0.0f);
 
         glBufferData(GL_ARRAY_BUFFER,

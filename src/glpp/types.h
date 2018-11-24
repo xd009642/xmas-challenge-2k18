@@ -5,6 +5,7 @@
 #include <cmath>
 #include <type_traits>
 #include <utility>
+#include <glm/glm.hpp>
 
 namespace glp {
 
@@ -45,6 +46,10 @@ namespace glp {
         point<T> normalise() const {
             T scale = std::sqrt(std::pow(x, static_cast<T>(2)) + std::pow(y, static_cast<T>(2)));
             return point<T>(x*scale, y*scale);
+        }
+
+        glm::vec2 as_glm_type() const {
+            return glm::vec2(x, y);
         }
     };
 

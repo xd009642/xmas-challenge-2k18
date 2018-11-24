@@ -18,14 +18,23 @@ namespace xc {
         bool read(const std::filesystem::path& path);
         bool write(const std::filesystem::path& path) const;
 
-        // Getters 
+        //! Whether the application should be fullscreen
         bool fullscreen() const noexcept;
+        //! Keyboard is enabled 
         bool keyboard() const noexcept;
+        //! Path to the programs asset directory
         const std::filesystem::path& asset_directory() const noexcept;
+        //! Path to the programs font directory - a subdirectory of the asset
+        //! directory
         std::filesystem::path font_directory() const;
+        //! Whether the system has a default font.
         const bool has_default_font() const noexcept;
+        //! Path to the default font or empty if there isn't one
         const std::filesystem::path& default_font() const noexcept;
+    
+        void set_default_font(const std::filesystem::path& font);
     protected:
+        //! Parse the configuration file
         void parse_config();
     private:
         //! Directory to search for fonts

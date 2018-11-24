@@ -5,4 +5,12 @@ assets = "data"
 
 [Display]
 fullscreen = true
-font = "FiraCode-Bold.ttf"
+font = "FiraCodeBold.ttf"
+
+[[Symbol]]
+name = "heading-tape"
+
+[[Symbol]]
+name = "pitch-ladder"
+
+

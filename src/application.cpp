@@ -22,7 +22,8 @@ void resize(int w, int h);
 void render();
 //! Keyboard event
 void keyboard_event(unsigned char key, int x, int y);
-
+//! Event for special keys - function keys arrow keys etc
+void special_key_event(int key, int x, int y);
 
 std::size_t framecount;
 
@@ -44,7 +45,18 @@ void xc::application::init() {
     if(!config.read("Config.toml")) {
         std::cout << "Failed to parse config file"<<std::endl;
     }
+    init_graphics();
+    
+    tpg.init();
+    heading.init();
 
+    init_fonts();
+    
+    std::cout<<"Application initialised "<<glGetError()<<std::endl;
+}
+
+        
+void xc::application::init_graphics() {
     glutInitWindowSize(500,500);
     window = glutCreateWindow("Xmas Challenge 2018");
 
@@ -61,6 +73,7 @@ void xc::application::init() {
     glutReshapeFunc(resize);
     glutIdleFunc(update);
     glutKeyboardFunc(keyboard_event);
+    glutSpecialFunc(special_key_event);
     glutDisplayFunc(render);
 
     auto err = glewInit();
@@ -71,12 +84,11 @@ void xc::application::init() {
     if(!GLEW_VERSION_2_1) {
         std::cerr<<"Error: Graphics card does not support OpenGL 2.0"<<std::endl;
     }
-
     std::cout<<"OpenGL version "<<glGetString(GL_VERSION)<<std::endl;
-    
-    tpg.init();
-    heading.init();
-    
+}
+
+
+void xc::application::init_fonts() {
     glp::program font_shader;
     std::filesystem::path f = config.asset_directory();
     f.append(xc::asset_folders::SHADER_DIR);
@@ -104,7 +116,6 @@ void xc::application::init() {
             }
         }
     }
-    std::cout<<"Application initialised "<<glGetError()<<std::endl;
 }
 
 
@@ -178,6 +189,13 @@ void render() {
 
 
 void keyboard_event(unsigned char key, int x, int y) {
+    if(key == 27) {
+        xc::application::instance().close();
+        return;
+    }
     xc::application::instance().command().push_char(key);
 }
 
+void special_key_event(int key, int x, int y) {
+
+}

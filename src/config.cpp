@@ -23,7 +23,6 @@ bool xc::config::write(const fs::path& path) const {
     return false;
 }
 
-
 void xc::config::parse_config() {
     if(file) {
         auto keyboard_res = file->get_qualified_as<bool>("Project.keyboard");
@@ -103,3 +102,6 @@ const std::filesystem::path& xc::config::default_font() const noexcept {
     return font;
 }
 
+void xc::config::set_default_font(const std::filesystem::path& font) {
+    this->font = font;
+}
