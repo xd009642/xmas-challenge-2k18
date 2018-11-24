@@ -9,8 +9,10 @@ find_package(GLUT REQUIRED)
 find_package(glm REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(cpptoml REQUIRED)
+find_package(Leap REQUIRED)
 
 add_subdirectory(glpp)
+add_subdirectory(input)
 add_subdirectory(symbols)
 
 if(NOT TARGET OpenGL::GLU)
@@ -32,12 +34,14 @@ include_directories(
     ${GLEW_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIR} 
     ${FREETYPE_INCLUDE_DIRS}
-    ${glm_INCLUDE_DIRS})
+    ${glm_INCLUDE_DIRS}
+    ${Leap_INCLUDE_DIR})
 
 add_executable(xmas ${LOCAL_SOURCE})
 
 target_link_libraries(xmas 
     glpp
+    input-control
     symbols
     OpenGL::OpenGL 
     OpenGL::GLU

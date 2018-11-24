@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include "application.h"
+#include "input/input.h"
 
 #include <GL/glut.h>
 #include <GL/gl.h>
@@ -50,6 +51,8 @@ void xc::application::init() {
     heading.init();
 
     init_fonts();
+
+    ip::create();
     
     std::cout<<"Application initialised "<<glGetError()<<std::endl;
 }
