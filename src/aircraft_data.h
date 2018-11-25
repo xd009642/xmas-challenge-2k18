@@ -3,16 +3,7 @@
 
 namespace xc {
 
-    enum class critical_data {
-        roll,
-        pitch,
-        yaw,
-        altitude,
-        speed,
-        heading,
-        fuel
-    };
-
+enum class critical_data { roll, pitch, yaw, altitude, speed, heading, fuel };
 }
 
 #endif

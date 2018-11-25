@@ -3,6 +3,4 @@
 
 #include "leap_interface.h"
 
-
-
 #endif

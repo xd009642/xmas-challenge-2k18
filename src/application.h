@@ -1,48 +1,48 @@
 #ifndef XC_APPLICATION_H
 #define XC_APPLICATION_H
 
+#include "commands.h"
+#include "config.h"
+#include "glpp/font_engine.h"
+#include "test_patterns.h"
 #include <cstddef>
 #include <string>
 #include <vector>
-#include "commands.h"
-#include "config.h"
-#include "test_patterns.h"
-#include "glpp/font_engine.h"
 
 namespace xc {
-    //! Singleton representing the application
-    class application final {
-    public:
-        static application& instance();
-        application(const application&) = delete;
-        application(const application&&) = delete;
-        //! Initialises the application
-        void init();
-        //! Starts the applications update loop
-        void start();
-        
-        void close();
+//! Singleton representing the application
+class application final {
+public:
+  static application &instance();
+  application(const application &) = delete;
+  application(const application &&) = delete;
+  //! Initialises the application
+  void init();
+  //! Starts the applications update loop
+  void start();
 
-        std::vector<std::string> get_available_fonts() const;
-        
-        command_interface& command();
+  void close();
 
-        test_pattern_generator& test_pattern();
+  std::vector<std::string> get_available_fonts() const;
 
-    private:
-        application();
+  command_interface &command();
 
-        void init_graphics();
-        void init_fonts();
+  test_pattern_generator &test_pattern();
 
-        glp::font_engine& fonts;
-        xc::config config;
-        xc::command_interface cmd;
-        xc::test_pattern_generator tpg;
-        bool running;
+private:
+  application();
 
-        int window;
-    };
-}
+  void init_graphics();
+  void init_fonts();
+
+  glp::font_engine &fonts;
+  xc::config config;
+  xc::command_interface cmd;
+  xc::test_pattern_generator tpg;
+  bool running;
+
+  int window;
+};
+} // namespace xc
 
 #endif
