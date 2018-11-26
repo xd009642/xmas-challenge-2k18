@@ -35,6 +35,9 @@ std::vector<glp::point<GLfloat>>
     make_scale_line(const glp::point<GLfloat> &left,
                     const glp::point<GLfloat> &right, GLfloat spacing,
                     GLfloat width, GLfloat thickness);
+
+// Radial dial given delta angle, inner radius, outer radius and line thickness
+std::vector<glp::point<GLfloat>> radial_ticks(const glp::point<GLfloat>& centre, GLfloat d_theta, GLfloat inner_radius, GLfloat outer_radius, GLfloat thickness);
 } // namespace sym
 
 #endif

@@ -15,6 +15,7 @@ void sym::heading_tape::init() {
             0.02f, 0.004f, 0.05f);
 
         points.insert(points.end(), minor_points.begin(), minor_points.end());
+
         glBufferData(GL_ARRAY_BUFFER,
                      points.size() * sizeof(glp::point<GLfloat>), points.data(),
                      GL_STATIC_DRAW);
