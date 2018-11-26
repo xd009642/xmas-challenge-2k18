@@ -1,4 +1,5 @@
 ﻿---
+Language: Cpp
 AllowShortBlocksOnASingleLine: 'false'
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: 'false'
@@ -11,6 +12,7 @@ SpaceBeforeParens: Never
 SpaceInEmptyParentheses: 'false'
 Standard: Cpp11
 TabWidth: '4'
+IndentWidth: 4
 UseTab: Never
 
 ...

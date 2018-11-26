@@ -12,36 +12,36 @@
 namespace xc {
 //! Singleton representing the application
 class application final {
-public:
-  static application &instance();
-  application(const application &) = delete;
-  application(const application &&) = delete;
-  //! Initialises the application
-  void init();
-  //! Starts the applications update loop
-  void start();
+  public:
+    static application &instance();
+    application(const application &) = delete;
+    application(const application &&) = delete;
+    //! Initialises the application
+    void init();
+    //! Starts the applications update loop
+    void start();
 
-  void close();
+    void close();
 
-  std::vector<std::string> get_available_fonts() const;
+    std::vector<std::string> get_available_fonts() const;
 
-  command_interface &command();
+    command_interface &command();
 
-  test_pattern_generator &test_pattern();
+    test_pattern_generator &test_pattern();
 
-private:
-  application();
+  private:
+    application();
 
-  void init_graphics();
-  void init_fonts();
+    void init_graphics();
+    void init_fonts();
 
-  glp::font_engine &fonts;
-  xc::config config;
-  xc::command_interface cmd;
-  xc::test_pattern_generator tpg;
-  bool running;
+    glp::font_engine &fonts;
+    xc::config config;
+    xc::command_interface cmd;
+    xc::test_pattern_generator tpg;
+    bool running;
 
-  int window;
+    int window;
 };
 } // namespace xc
 
