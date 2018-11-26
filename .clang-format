@@ -1,0 +1,16 @@
+﻿---
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: 'false'
+Cpp11BracedListStyle: 'true'
+IndentCaseLabels: 'false'
+IndentWrappedFunctionNames: 'true'
+NamespaceIndentation: Inner
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeParens: Never
+SpaceInEmptyParentheses: 'false'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: Never
+
+...
