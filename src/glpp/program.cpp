@@ -100,8 +100,14 @@ bool glp::program::compile() {
             int success;
             glGetProgramiv(id, GL_LINK_STATUS, &success);
             if(!success) {
+                std::string proglog;
+                GLint size;
+                glGetProgramiv(id, GL_INFO_LOG_LENGTH, &size);
+                proglog.resize(size);
+                glGetProgramInfoLog(id, size, &size, proglog.data());
                 prog.reset();
-                std::cout << "Failed to compile program" << std::endl;
+                std::cout << "Failed to compile program: " << proglog
+                          << std::endl;
             }
             // now they're linked don't need them
             glDetachShader(id, fragment->id());

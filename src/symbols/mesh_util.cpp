@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 
-const GLfloat MIN_THICKNESS = 0.005f;
+const GLfloat MIN_THICKNESS = 0.003f;
 
 std::vector<glp::point<GLfloat>>
     sym::make_line_mesh(const std::vector<glp::point<GLfloat>> &points,
