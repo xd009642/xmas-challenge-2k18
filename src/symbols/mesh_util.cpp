@@ -1,7 +1,7 @@
 #include "mesh_util.h"
-#include <glm/ext.hpp>
 #include <algorithm>
 #include <cmath>
+#include <glm/ext.hpp>
 #include <iostream>
 #include <utility>
 
@@ -98,30 +98,35 @@ std::vector<glp::point<GLfloat>>
     return result;
 }
 
+std::vector<glp::point<GLfloat>>
+    sym::radial_ticks(const glp::point<GLfloat> &centre, GLfloat d_theta,
+                      GLfloat inner_radius, GLfloat outer_radius,
+                      GLfloat thickness, GLfloat start_angle,
+                      GLfloat end_angle) {
 
-std::vector<glp::point<GLfloat>> sym::radial_ticks(const glp::point<GLfloat>& centre, GLfloat d_theta, GLfloat inner_radius, GLfloat outer_radius, GLfloat thickness) {
-    std::vector<glp::point<GLfloat>> result; 
-   
-    const size_t N_SLICES = 2.0f*glm::pi<GLfloat>()/d_theta + 1;
+    std::vector<glp::point<GLfloat>> result;
+
+    const size_t N_SLICES = (end_angle - start_angle) / d_theta + 1;
     result.reserve(N_SLICES * 6);
-    
+
     std::vector<glp::point<GLfloat>> two_points(2);
-    GLfloat theta = 0.0f;
-    for(size_t i=0; i<N_SLICES; i++) {
-        if(theta > 2.0f*glm::pi<GLfloat>()) {
+    GLfloat theta = start_angle;
+    for(size_t i = 0; i < N_SLICES; i++) {
+        if(theta > end_angle) {
             break;
         }
         GLfloat ct = std::cos(theta);
         GLfloat st = std::sin(theta);
         theta += d_theta;
-        two_points[0] = {inner_radius * ct + centre.x, inner_radius * st + centre.y};
-        two_points[1] = {outer_radius * ct + centre.x, outer_radius * st + centre.y};
-        
+        two_points[0] = {inner_radius * ct + centre.x,
+                         inner_radius * st + centre.y};
+        two_points[1] = {outer_radius * ct + centre.x,
+                         outer_radius * st + centre.y};
+
         const auto temp = make_line_mesh(two_points, thickness);
         result.insert(result.end(), temp.begin(), temp.end());
     }
-    std::cout<<result.size()<<std::endl;
+    std::cout << result.size() << std::endl;
 
     return result;
 }
-

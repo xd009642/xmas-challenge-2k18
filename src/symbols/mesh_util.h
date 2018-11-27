@@ -3,9 +3,12 @@
 
 #include "../glpp/gl_includes.h"
 #include "../glpp/types.h"
+#include <glm/ext.hpp>
 #include <vector>
 
 namespace sym {
+
+constexpr GLfloat TWO_PI = glm::pi<GLfloat>() * 2.0f;
 
 // Gets normal from line, To rotate 180 degrees negate
 template <typename T>
@@ -37,7 +40,10 @@ std::vector<glp::point<GLfloat>>
                     GLfloat width, GLfloat thickness);
 
 // Radial dial given delta angle, inner radius, outer radius and line thickness
-std::vector<glp::point<GLfloat>> radial_ticks(const glp::point<GLfloat>& centre, GLfloat d_theta, GLfloat inner_radius, GLfloat outer_radius, GLfloat thickness);
+std::vector<glp::point<GLfloat>>
+    radial_ticks(const glp::point<GLfloat> &centre, GLfloat d_theta,
+                 GLfloat inner_radius, GLfloat outer_radius, GLfloat thickness,
+                 GLfloat start_angle = 0.0f, GLfloat end_angle = TWO_PI);
 } // namespace sym
 
 #endif
