@@ -35,10 +35,14 @@ class font_engine final {
     void render_text(const std::string_view text, float x, float y, float sx,
                      float sy, colour c = green);
 
+    //! Returns a list of the points for a texture mesh in xyst coords. If you 
+    //! want 3D you'll have to write it yourself
     std::vector<glp::mesh_2d> get_text_mesh(const std::string_view text,
                                             float x, float y, float sx,
                                             float sy);
-
+    
+    //! Get the width and height of the text when rendered at full scale
+    glp::point<float> text_dimensions(const std::string_view text) const;
   private:
     font_engine();
 

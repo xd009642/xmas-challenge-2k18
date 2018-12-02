@@ -152,3 +152,36 @@ std::vector<glp::mesh_2d> glp::font_engine::get_text_mesh(const std::string_view
     }
     return coords;
 }
+
+
+glp::point<float> glp::font_engine::text_dimensions(const std::string_view text) const {
+    float height = glutGet(GLUT_WINDOW_HEIGHT);
+    float width = glutGet(GLUT_WINDOW_WIDTH);
+    float x = 0.0f, y = 0.0f;
+
+    float max_height = 0.0f, max_width= 0.0f;
+    
+    for(const char &c : text) {
+        if(atlas.contains(c)) {
+            const auto &e = atlas.get_entry(c);
+            x += e.x_increment;
+            y = std::max(y, static_cast<float>(e.height));
+        } else { // 0 width char like space or \n \r
+            // advance x and y
+            x += 10;
+            if(c == '\n' || c == '\r') {
+                max_width = std::max(max_width, x);
+                max_height += y;
+                y = 0.0f;
+                x = 0.0f;
+            } else if(c == ' ') {
+                x += atlas.space_width();
+            }
+        }
+    }
+    max_width = std::max(max_width, x);
+    if(text.back() != '\n' && text.back() != '\r') {
+        max_height += y;
+    }
+    return glp::point<float>(max_width, max_height);
+}
