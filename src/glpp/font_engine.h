@@ -35,6 +35,10 @@ class font_engine final {
     void render_text(const std::string_view text, float x, float y, float sx,
                      float sy, colour c = green);
 
+    std::vector<glp::mesh_2d> get_text_mesh(const std::string_view text,
+                                            float x, float y, float sx,
+                                            float sy);
+
   private:
     font_engine();
 

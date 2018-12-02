@@ -79,65 +79,76 @@ void glp::font_engine::render_text(const std::string_view text, float x,
         glBindBuffer(GL_ARRAY_BUFFER, vbo->id());
         glVertexAttribPointer(coord, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-        std::vector<glp::mesh_2d> coords;
-        size_t max_height = 0;
-        float start_x = x;
-        // Sort out coordinates and texturing
-        for(const char &c : text) {
-            if(atlas.contains(c)) {
-                const auto &e = atlas.get_entry(c);
-                size_t start = coords.size();
-                coords.resize(start + 6);
-                float y_temp = y - (e.height - e.top);
-                float x_temp = x + e.left;
-                // Set the 6 coordinates
-                coords[start].x = (x_temp) / width;
-                coords[start].y = y_temp / height;
-                coords[start].s = e.tx0;
-                coords[start++].t = e.ty0;
-
-                coords[start].x = (x_temp) / width;
-                coords[start].y = (y_temp + e.height) / height;
-                coords[start].s = e.tx0;
-                coords[start++].t = e.ty1;
-
-                coords[start].x = (x_temp + e.width) / width;
-                coords[start].y = (y_temp + e.height) / height;
-                coords[start].s = e.tx1;
-                coords[start++].t = e.ty1;
-
-                coords[start].x = (x_temp) / width;
-                coords[start].y = (y_temp) / height;
-                coords[start].s = e.tx0;
-                coords[start++].t = e.ty0;
-
-                coords[start].x = (x_temp + e.width) / width;
-                coords[start].y = (y_temp + e.height) / height;
-                coords[start].s = e.tx1;
-                coords[start++].t = e.ty1;
-
-                coords[start].x = (x_temp + e.width) / width;
-                coords[start].y = (y_temp) / height;
-                coords[start].s = e.tx1;
-                coords[start].t = e.ty0;
-
-                x += e.x_increment;
-                y += e.y_increment;
-                max_height = std::max(max_height, e.height);
-            } else { // 0 width char like space or \n \r
-                // advance x and y
-                x += 10;
-                if(c == '\n' || c == '\r') {
-                    x = start_x;
-                    y -= max_height + 5;
-                } else if(c == ' ') {
-                    x += atlas.space_width();
-                }
-            }
-        }
+        std::vector<glp::mesh_2d> coords = get_text_mesh(text, x, y, sx, sy);
         glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(glp::mesh_2d),
                      coords.data(), GL_DYNAMIC_DRAW);
         glDrawArrays(GL_TRIANGLES, 0, coords.size());
         glDisableVertexAttribArray(coord);
     }
+}
+
+std::vector<glp::mesh_2d> glp::font_engine::get_text_mesh(const std::string_view text, float x,
+                                    float y, float sx, float sy) {
+    
+    float height = glutGet(GLUT_WINDOW_HEIGHT);
+    float width = glutGet(GLUT_WINDOW_WIDTH);
+    std::vector<glp::mesh_2d> coords;
+    float max_height = 0;
+    float start_x = x;
+    // Sort out coordinates and texturing
+    for(const char &c : text) {
+        if(atlas.contains(c)) {
+            const auto &e = atlas.get_entry(c);
+            size_t start = coords.size();
+            coords.resize(start + 6);
+            const float y_temp = y - (e.height - e.top) * sy;
+            const float x_temp = x + e.left * sx;
+            const float h_temp = e.height * sy;
+            const float w_temp = e.width * sx;
+            // Set the 6 coordinates
+            coords[start].x = (x_temp) / width;
+            coords[start].y = y_temp / height;
+            coords[start].s = e.tx0;
+            coords[start++].t = e.ty0;
+
+            coords[start].x = (x_temp) / width;
+            coords[start].y = (y_temp + h_temp) / height;
+            coords[start].s = e.tx0;
+            coords[start++].t = e.ty1;
+
+            coords[start].x = (x_temp + w_temp) / width;
+            coords[start].y = (y_temp + h_temp) / height;
+            coords[start].s = e.tx1;
+            coords[start++].t = e.ty1;
+
+            coords[start].x = (x_temp) / width;
+            coords[start].y = (y_temp) / height;
+            coords[start].s = e.tx0;
+            coords[start++].t = e.ty0;
+
+            coords[start].x = (x_temp + w_temp) / width;
+            coords[start].y = (y_temp + h_temp) / height;
+            coords[start].s = e.tx1;
+            coords[start++].t = e.ty1;
+
+            coords[start].x = (x_temp + w_temp) / width;
+            coords[start].y = (y_temp) / height;
+            coords[start].s = e.tx1;
+            coords[start].t = e.ty0;
+
+            x += e.x_increment * sx;
+            y += e.y_increment * sy;
+            max_height = std::max(max_height, h_temp);
+        } else { // 0 width char like space or \n \r
+            // advance x and y
+            x += 10;
+            if(c == '\n' || c == '\r') {
+                x = start_x;
+                y -= max_height + 5;
+            } else if(c == ' ') {
+                x += atlas.space_width();
+            }
+        }
+    }
+    return coords;
 }

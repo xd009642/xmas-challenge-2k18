@@ -176,8 +176,8 @@ void render() {
     tpg.render();
 
     heading.render();
-    fonts.render_text(cmd.display(), font_margin, height - 40, 1, 1);
-    fonts.render_text(cmd.cmd_string(), font_margin, -(height - 30), 1, 1);
+    fonts.render_text(cmd.display(), font_margin, height - 40, 1.0f, 1.0f);
+    fonts.render_text(cmd.cmd_string(), font_margin, -(height - 30), 1.0f, 1.0f);
     glutSwapBuffers();
 }
 
