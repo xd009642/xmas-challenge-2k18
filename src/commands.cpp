@@ -43,6 +43,10 @@ bool xc::command_interface::check() {
         _current = xc::command::tpg_show;
         buffer.erase(0, TPG_SHOW.size());
         cmd_arg = buffer;
+    } else if(buffer == "grab win") {
+        _current = xc::command::grab_win;
+    } else if(buffer == "grab lose") {
+        _current = xc::command::grab_lose;
     } else {
         result = false;
         _current = xc::command::invalid;
@@ -62,6 +66,8 @@ void xc::command_interface::execute() {
                           TPG_PREFIX +
                           " show <PATTERN>: display a pattern using the test "
                           "pattern generator\n";
+        display_string += "grab win: grab the winner token\n"
+                          "grab lose: grab the loser token\n";
     } else if(_current == xc::command::clear) {
         display_string = "";
     } else if(_current == xc::command::exit) {
@@ -76,6 +82,10 @@ void xc::command_interface::execute() {
     } else if(_current == xc::command::tpg_show) {
         xc::application::instance().test_pattern().select(cmd_arg);
         display_string.clear();
+    } else if(_current == xc::command::grab_win) {
+        xc::application::instance().arm_control().grab_win();
+    } else if(_current == xc::command::grab_lose) {
+        xc::application::instance().arm_control().grab_lose();
     } else {
         display_string = "Invalid command!";
     }

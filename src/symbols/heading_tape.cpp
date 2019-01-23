@@ -36,7 +36,7 @@ void sym::heading_tape::init() {
         std::string frag = "#version 120\n"
                            "varying float is_on;\n"
                            "void main(void) {\n"
-                           "gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0) * is_on;\n"
+                           "gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0) * is_on + vec4(1.0,1.0,1.0,1.0)*(1.0-is_on);\n"
                            "}";
 
         shader = std::make_shared<glp::program>();

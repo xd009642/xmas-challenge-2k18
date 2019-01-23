@@ -1,6 +1,7 @@
 #ifndef XC_APPLICATION_H
 #define XC_APPLICATION_H
 
+#include "arm_control.h"
 #include "commands.h"
 #include "config.h"
 #include "glpp/font_engine.h"
@@ -29,12 +30,14 @@ class application final {
 
     test_pattern_generator &test_pattern();
 
+    arm_controller& arm_control();
   private:
     application();
 
     void init_graphics();
     void init_fonts();
 
+    xc::arm_controller arm;
     glp::font_engine &fonts;
     xc::config config;
     xc::command_interface cmd;

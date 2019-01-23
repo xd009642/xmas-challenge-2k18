@@ -47,6 +47,9 @@ void xc::application::init() {
 
     tpg.init();
     heading.init();
+    if(!arm.init()) {
+        std::cout<<"Arm client didn't start up"<<std::endl;
+    }
 
     init_fonts();
 
@@ -63,7 +66,7 @@ void xc::application::init_graphics() {
 
     int mode = GLUT_RGB | GLUT_SINGLE;
     glutInitDisplayMode(mode);
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
 
     glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
@@ -130,12 +133,16 @@ std::vector<std::string> xc::application::get_available_fonts() const {
     return {};
 }
 
-xc::command_interface &xc::application::command() {
+xc::command_interface& xc::application::command() {
     return cmd;
 }
 
-xc::test_pattern_generator &xc::application::test_pattern() {
+xc::test_pattern_generator& xc::application::test_pattern() {
     return tpg;
+}
+
+xc::arm_controller& xc::application::arm_control() {
+    return arm;
 }
 
 void update(int) {
@@ -165,7 +172,7 @@ void resize(int w, int h) {
 void render() {
     int height = glutGet(GLUT_WINDOW_HEIGHT);
     int width = glutGet(GLUT_WINDOW_WIDTH);
-    int font_margin = -width + 25;
+    int font_margin = -width + 150;
 
     glp::font_engine &fonts = glp::font_engine::instance();
     auto &tpg = xc::application::instance().test_pattern();
@@ -177,7 +184,7 @@ void render() {
 
     heading.render();
     fonts.render_text(cmd.display(), font_margin, height - 40, 1.0f, 1.0f);
-    fonts.render_text(cmd.cmd_string(), font_margin, -(height - 30), 1.0f, 1.0f);
+    fonts.render_text(cmd.cmd_string(), font_margin, -(height - 70), 1.0f, 1.0f);
     glutSwapBuffers();
 }
 

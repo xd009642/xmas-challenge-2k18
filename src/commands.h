@@ -17,6 +17,8 @@ enum class command {
     exit,
     tpg_list,
     tpg_show,
+    grab_win,
+    grab_lose,
     invalid
 };
 
