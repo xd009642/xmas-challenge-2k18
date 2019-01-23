@@ -44,7 +44,20 @@ void xc::application::init() {
         std::cout << "Failed to parse config file" << std::endl;
     }
     init_graphics();
-
+    
+    joysticks.emplace_back(std::make_shared<xc::joystick>(0));
+    joysticks.emplace_back(std::make_shared<xc::joystick>(1));
+    for(auto& j: joysticks) {
+        if(j && j->is_available()) {
+            j->connect();
+        }
+    }
+    joysticks.erase(std::remove_if(joysticks.begin(), joysticks.end(), 
+        [](const std::shared_ptr<xc::joystick>& o) {
+            return !o && !o->is_good();
+        }
+    ));
+    std::cout<<"[INFO] Connected to "<<joysticks.size()<<" joysticks"<<std::endl;
     tpg.init();
     heading.init();
     if(!arm.init()) {
@@ -125,6 +138,7 @@ void xc::application::start() {
 }
 
 void xc::application::close() {
+    joysticks.clear();
     glutDestroyWindow(window);
     exit(0);
 }
@@ -145,8 +159,18 @@ xc::arm_controller& xc::application::arm_control() {
     return arm;
 }
 
+std::vector<std::shared_ptr<xc::joystick>>& xc::application::get_sticks() {
+    return joysticks;
+}
+
 void update(int) {
     bool had_error = false;
+    auto& joysticks = xc::application::instance().get_sticks();
+    for(int i=0; i<joysticks.size(); i++) {
+        if(joysticks[i] && joysticks[i]->is_good()) {
+            xc::print_state(joysticks[i]->get_state());
+        }
+    }
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {
         std::cout << "Frame " << framecount << ": GL Error " << err

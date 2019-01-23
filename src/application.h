@@ -6,9 +6,11 @@
 #include "config.h"
 #include "glpp/font_engine.h"
 #include "test_patterns.h"
+#include "joystick_interface.h"
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace xc {
 //! Singleton representing the application
@@ -31,6 +33,8 @@ class application final {
     test_pattern_generator &test_pattern();
 
     arm_controller& arm_control();
+
+    std::vector<std::shared_ptr<xc::joystick>>& get_sticks();
   private:
     application();
 
@@ -45,6 +49,8 @@ class application final {
     bool running;
 
     int window;
+
+    std::vector<std::shared_ptr<xc::joystick>> joysticks;
 };
 } // namespace xc
 

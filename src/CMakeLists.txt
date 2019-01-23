@@ -37,7 +37,8 @@ set(LOCAL_SOURCE
     config.cpp
     commands.cpp
     test_patterns.cpp
-    arm_control.cpp)
+    arm_control.cpp
+    joystick_interface.cpp)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
