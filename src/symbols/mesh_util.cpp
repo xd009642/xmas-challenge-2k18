@@ -21,9 +21,9 @@ std::vector<glp::point<GLfloat>>
         result.emplace_back(points[0].x - radius, points[0].y + radius);
         result.emplace_back(points[0].x + radius, points[0].y + radius);
 
-        result.emplace_back(points[0].x - radius, points[0].y - radius);
-        result.emplace_back(points[0].x - radius, points[0].y + radius);
         result.emplace_back(points[0].x + radius, points[0].y - radius);
+        result.emplace_back(points[0].x + radius, points[0].y + radius);
+        result.emplace_back(points[0].x - radius, points[0].y - radius);
     } else if(points.size() == 2) {
         auto norm = get_normal(points[0], points[1]);
         result.emplace_back(points[0] - (norm * radius));

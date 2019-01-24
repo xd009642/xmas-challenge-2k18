@@ -7,6 +7,7 @@ if(NOT TARGET OpenGL::OpenGL)
 endif()
 
 set(LOCAL_SOURCE 
+    pong.cpp
     airspeed.cpp
     heading_tape.cpp
     mesh_util.cpp)

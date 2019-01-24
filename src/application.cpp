@@ -5,12 +5,12 @@
 #include <GL/glut.h>
 #include <filesystem>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <utility>
+#include "symbols/pong.h"
 
-#include "symbols/heading_tape.h"
-
-sym::heading_tape heading;
+sym::pong game;
 
 namespace fs = std::filesystem;
 
@@ -59,13 +59,12 @@ void xc::application::init() {
     ));
     std::cout<<"[INFO] Connected to "<<joysticks.size()<<" joysticks"<<std::endl;
     tpg.init();
-    heading.init();
     if(!arm.init()) {
         std::cout<<"Arm client didn't start up"<<std::endl;
     }
 
     init_fonts();
-
+    game.init();
     std::cout << "Application initialised " << glGetError() << std::endl;
 }
 
@@ -166,9 +165,25 @@ std::vector<std::shared_ptr<xc::joystick>>& xc::application::get_sticks() {
 void update(int) {
     bool had_error = false;
     auto& joysticks = xc::application::instance().get_sticks();
+    auto& arm = xc::application::instance().arm_control();
     for(int i=0; i<joysticks.size(); i++) {
         if(joysticks[i] && joysticks[i]->is_good()) {
-            xc::print_state(joysticks[i]->get_state());
+            if(game.check_if_lost(static_cast<sym::player>(i))) {
+                std::cout<<"Main player lost"<<std::endl;
+                arm.grab_lose();
+                game.reset();
+            } else if(game.check_if_won(static_cast<sym::player>(i))){
+                std::cout<<"Main player won"<<std::endl;
+                arm.grab_win();
+                game.reset();
+            } else {
+
+                auto left_up = joysticks[i]->get_state().left_stick.y;
+                float pos = -0.2f * static_cast<float>(left_up)/
+                    static_cast<float>(std::numeric_limits<int16_t>::max());
+                game.set_autoplay(static_cast<sym::player>(i), false);
+                game.set_paddle_position(static_cast<sym::player>(i), pos);
+            }
         }
     }
     GLenum err;
@@ -206,7 +221,7 @@ void render() {
 
     tpg.render();
 
-    heading.render();
+    game.render();
     fonts.render_text(cmd.display(), font_margin, height - 40, 1.0f, 1.0f);
     fonts.render_text(cmd.cmd_string(), font_margin, -(height - 70), 1.0f, 1.0f);
     glutSwapBuffers();
