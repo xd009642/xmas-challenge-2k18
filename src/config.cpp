@@ -3,26 +3,24 @@
 
 namespace fs = std::filesystem;
 
-
-
-bool xc::config::read(const fs::path& path) {
+bool xc::config::read(const fs::path &path) {
     if(path.has_filename() && fs::exists(path)) {
         try {
-            std::cout<<"Parsing config"<<std::endl;
-            file = cpptoml::parse_file(path); 
+            std::cout << "Parsing config" << std::endl;
+            file = cpptoml::parse_file(path);
             parse_config();
             return true;
         } catch(const cpptoml::parse_exception e) {
-            std::cerr<<"Failed to parse config file: "<<e.what()<<std::endl;
+            std::cerr << "Failed to parse config file: " << e.what()
+                      << std::endl;
         }
     }
     return false;
 }
 
-bool xc::config::write(const fs::path& path) const {
+bool xc::config::write(const fs::path &path) const {
     return false;
 }
-
 
 void xc::config::parse_config() {
     if(file) {
@@ -34,9 +32,9 @@ void xc::config::parse_config() {
         if(debug_res) {
             debug = *debug_res;
         } else {
-            std::cout<<"No debug?";
+            std::cout << "No debug?";
         }
-        
+
         auto asset_res = file->get_qualified_as<std::string>("Project.assets");
         if(asset_res) {
             asset_dir = *asset_res;
@@ -52,7 +50,7 @@ void xc::config::parse_config() {
             std::string temp_font;
             if(asset_res) {
                 auto fnt_res = disp_table->get_as<std::string>("font");
-                if (fnt_res) {
+                if(fnt_res) {
                     temp_font = *fnt_res;
                 }
             }
@@ -64,16 +62,16 @@ void xc::config::parse_config() {
         }
 
         if(debug) {
-            std::cout<<"Loaded configuration is"<<std::endl;
-            std::cout<<"  Fullscreen: "<<is_fullscreen<<std::endl;
-            std::cout<<"  Keyboard: "<<has_keyboard<<std::endl;
-            std::cout<<"  Assets directory: "<<asset_dir<<std::endl;
+            std::cout << "Loaded configuration is" << std::endl;
+            std::cout << "  Fullscreen: " << is_fullscreen << std::endl;
+            std::cout << "  Keyboard: " << has_keyboard << std::endl;
+            std::cout << "  Assets directory: " << asset_dir << std::endl;
             if(!font.empty()) {
-                std::cout<<"  Default font: "<<font<<std::endl;
+                std::cout << "  Default font: " << font << std::endl;
             }
         }
     } else {
-        std::cout<<"File was invalid"<<std::endl;
+        std::cout << "File was invalid" << std::endl;
     }
 }
 
@@ -85,7 +83,7 @@ bool xc::config::keyboard() const noexcept {
     return has_keyboard;
 }
 
-const std::filesystem::path& xc::config::asset_directory() const noexcept {
+const std::filesystem::path &xc::config::asset_directory() const noexcept {
     return asset_dir;
 }
 
@@ -99,7 +97,10 @@ const bool xc::config::has_default_font() const noexcept {
     return !font.empty();
 }
 
-const std::filesystem::path& xc::config::default_font() const noexcept {
+const std::filesystem::path &xc::config::default_font() const noexcept {
     return font;
 }
 
+void xc::config::set_default_font(const std::filesystem::path &font) {
+    this->font = font;
+}

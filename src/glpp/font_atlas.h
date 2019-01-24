@@ -8,67 +8,67 @@
 
 #include <algorithm>
 #include <exception>
+#include <ft2build.h>
 #include <map>
 #include <memory>
 #include <string>
-#include <ft2build.h>
 #include FT_FREETYPE_H
-
 
 namespace glp {
 
-    struct entry {
-        GLfloat tx0;
-        GLfloat tx1;
-        GLfloat ty0;
-        GLfloat ty1;
-        size_t width;
-        size_t height;
-        int left = 0;
-        int top = 0;
-        float x_increment;
-        float y_increment;
-        float origin;
-    };
+struct entry {
+    GLfloat tx0;
+    GLfloat tx1;
+    GLfloat ty0;
+    GLfloat ty1;
+    size_t width;
+    size_t height;
+    int left = 0;
+    int top = 0;
+    float x_increment;
+    float y_increment;
+    float origin;
+};
 
-    //! Texture atlas class
-    class font_atlas {
-    public:
-        font_atlas() = default;
-        //! Construct an atlas given a face and a font size (pixels)
-        font_atlas(FT_Face face, size_t font_size);
-        ~font_atlas();
-        //! Does the atlas contain a valid texture?
-        bool valid() const;
-        //! Binds the texture, unbinding when the lock is out of scope
-        generic_lock bind();
-        //! Does it contain the following character?
-        bool contains(const char c) const;
+//! Texture atlas class
+class font_atlas {
+  public:
+    font_atlas() = default;
+    //! Construct an atlas given a face and a font size (pixels)
+    font_atlas(FT_Face face, size_t font_size);
+    ~font_atlas();
+    //! Does the atlas contain a valid texture?
+    bool valid() const;
+    //! Binds the texture, unbinding when the lock is out of scope
+    generic_lock bind();
+    //! Does it contain the following character?
+    bool contains(const char c) const;
 
-        const entry& get_entry(const char c) const;
+    const entry &get_entry(const char c) const;
 
-        range2u dimensions() const;
+    range2u dimensions() const;
 
-        float space_width() const;
-    protected:
-        uint32_t get_atlas_height(FT_Face& face);
+    float space_width() const;
 
-    private:
-        bool is_valid = false;
+  protected:
+    uint32_t get_atlas_height(FT_Face &face);
 
-        static constexpr char MIN_CHAR = '!';
-        static constexpr char MAX_CHAR = '~';
-        
-        GLuint tex_id;
+  private:
+    bool is_valid = false;
 
-        std::shared_ptr<texture> tex;
+    static constexpr char MIN_CHAR = '!';
+    static constexpr char MAX_CHAR = '~';
 
-        range2u dim;
-        std::map<char, entry> characters;
+    GLuint tex_id;
 
-        float space;
-    };
-    
-}
+    std::shared_ptr<texture> tex;
+
+    range2u dim;
+    std::map<char, entry> characters;
+
+    float space;
+};
+
+} // namespace glp
 
 #endif

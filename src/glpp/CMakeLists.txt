@@ -1,6 +1,7 @@
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(glm REQUIRED)
 find_package(Freetype REQUIRED)
 
 if(NOT TARGET OpenGL::GLU)
@@ -22,7 +23,8 @@ set(LOCAL_SOURCE
 include_directories(
     ${GLEW_INCLUDE_DIR}
     ${GLUT_INCLUDE_DIR} 
-    ${FREETYPE_INCLUDE_DIRS})
+    ${FREETYPE_INCLUDE_DIRS}
+    ${glm_INCLUDE_DIRS})
 
 add_library(glpp ${LOCAL_SOURCE})
 

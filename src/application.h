@@ -1,41 +1,57 @@
 #ifndef XC_APPLICATION_H
 #define XC_APPLICATION_H
 
-#include <cstddef>
-#include <string>
-#include <vector>
+#include "arm_control.h"
 #include "commands.h"
 #include "config.h"
 #include "glpp/font_engine.h"
+#include "test_patterns.h"
+#include "joystick_interface.h"
+#include <cstddef>
+#include <string>
+#include <vector>
+#include <memory>
 
 namespace xc {
-    //! Singleton representing the application
-    class application final {
-    public:
-        static application& instance();
-        application(const application&) = delete;
-        application(const application&&) = delete;
-        //! Initialises the application
-        void init();
-        //! Starts the applications update loop
-        void start();
-        
-        void close();
+//! Singleton representing the application
+class application final {
+  public:
+    static application &instance();
+    application(const application &) = delete;
+    application(const application &&) = delete;
+    //! Initialises the application
+    void init();
+    //! Starts the applications update loop
+    void start();
 
-        std::vector<std::string> get_available_fonts() const;
-        
-        command_interface& command();
+    void close();
 
-    private:
-        application();
+    std::vector<std::string> get_available_fonts() const;
 
-        glp::font_engine& fonts;
-        xc::config config;
-        xc::command_interface cmd;
-        bool running;
+    command_interface &command();
 
-        int window;
-    };
-}
+    test_pattern_generator &test_pattern();
+
+    arm_controller& arm_control();
+
+    std::vector<std::shared_ptr<xc::joystick>>& get_sticks();
+  private:
+    application();
+
+    void init_graphics();
+    void init_fonts();
+
+    xc::arm_controller arm;
+    glp::font_engine &fonts;
+    xc::config config;
+    xc::command_interface cmd;
+    xc::test_pattern_generator tpg;
+    bool running;
+
+    int window;
+
+    std::vector<std::shared_ptr<xc::joystick>> joysticks;
+};
+} // namespace xc
 
 #endif
